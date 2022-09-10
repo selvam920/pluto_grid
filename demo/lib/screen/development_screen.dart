@@ -58,6 +58,24 @@ class _DevelopmentScreenState extends State<DevelopmentScreen> {
     });
     columns[0].enableRowDrag = true;
     columns[0].enableRowChecked = true;
+    columns[0].footerRenderer = (c) {
+      return PlutoAggregateColumnFooter(
+        rendererContext: c,
+        type: PlutoAggregateColumnType.count,
+        format: 'CheckedCount : #,###',
+        alignment: Alignment.center,
+        filter: (cell) => cell.row.checked == true,
+      );
+    };
+    columns[1].footerRenderer = (c) {
+      return PlutoAggregateColumnFooter(
+        rendererContext: c,
+        type: PlutoAggregateColumnType.sum,
+        format: 'CheckedSum : #,###',
+        alignment: Alignment.center,
+        filter: (cell) => cell.row.checked == true,
+      );
+    };
   }
 
   void handleOnRowChecked(PlutoGridOnRowCheckedEvent event) {
@@ -143,6 +161,14 @@ class _DevelopmentScreenState extends State<DevelopmentScreen> {
                 evenRowColor: const Color(0xFFF6F6F6),
                 gridBorderRadius: BorderRadius.circular(10),
                 gridPopupBorderRadius: BorderRadius.circular(7),
+                // columnAscendingIcon: const Icon(
+                //   Icons.arrow_upward,
+                //   color: Colors.cyan,
+                // ),
+                // columnDescendingIcon: const Icon(
+                //   Icons.arrow_downward,
+                //   color: Colors.pink,
+                // ),
               ),
               // enableGridBorderShadow: true,
               enableMoveHorizontalInEditing: true,
@@ -302,6 +328,11 @@ class _HeaderState extends State<_Header> {
   void handleToggleColumnFilter() {
     widget.stateManager
         .setShowColumnFilter(!widget.stateManager.showColumnFilter);
+  }
+
+  void handleToggleColumnFooter() {
+    widget.stateManager
+        .setShowColumnFooter(!widget.stateManager.showColumnFooter);
   }
 
   void handleSelectingMode(Object? mode) {
@@ -537,6 +568,10 @@ class _HeaderState extends State<_Header> {
             PlutoMenuItem(
               title: 'Toggle column filter',
               onTap: handleToggleColumnFilter,
+            ),
+            PlutoMenuItem(
+              title: 'Toggle column footer',
+              onTap: handleToggleColumnFooter,
             ),
           ],
         ),

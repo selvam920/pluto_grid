@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
+import '../ui.dart';
+
 class PlutoColumnFilter extends PlutoStatefulWidget {
   final PlutoGridStateManager stateManager;
 
@@ -55,6 +57,13 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
   InputBorder get _enabledBorder => OutlineInputBorder(
         borderSide: BorderSide(
             color: stateManager.configuration!.style.activatedBorderColor,
+            width: 0.0),
+        borderRadius: BorderRadius.zero,
+      );
+
+  InputBorder get _disabledBorder => OutlineInputBorder(
+        borderSide: BorderSide(
+            color: stateManager.configuration!.style.inactivatedBorderColor,
             width: 0.0),
         borderRadius: BorderRadius.zero,
       );
@@ -254,6 +263,7 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
             fillColor: _textFieldColor,
             border: _border,
             enabledBorder: _border,
+            disabledBorder: _disabledBorder,
             focusedBorder: _enabledBorder,
             contentPadding: const EdgeInsets.all(5),
           ),

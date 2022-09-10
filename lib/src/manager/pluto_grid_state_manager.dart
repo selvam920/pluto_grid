@@ -132,6 +132,9 @@ class PlutoGridStateManager extends PlutoGridStateChangeNotifier {
     setCreateHeader(createHeader);
     setCreateFooter(createFooter);
     setConfiguration(configuration);
+    setShowColumnFooter(
+      columns.any((element) => element.footerRenderer != null),
+    );
     setGridKey(GlobalKey());
   }
 
@@ -337,7 +340,7 @@ class PlutoGridCellPosition {
   }
 
   @override
-  int get hashCode => hashValues(columnIdx, rowIdx);
+  int get hashCode => Object.hash(columnIdx, rowIdx);
 }
 
 class PlutoGridSelectingCellPosition {
@@ -355,7 +358,7 @@ class PlutoGridSelectingCellPosition {
   }
 
   @override
-  int get hashCode => hashValues(field, rowIdx);
+  int get hashCode => Object.hash(field, rowIdx);
 }
 
 class PlutoGridKeyPressed {

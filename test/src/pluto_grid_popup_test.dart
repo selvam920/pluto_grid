@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pluto_grid/pluto_grid.dart';
+import 'package:pluto_grid/src/ui/ui.dart';
 
 import '../helper/column_helper.dart';
 import '../helper/row_helper.dart';
@@ -15,7 +16,7 @@ void main() {
 
   late PlutoGridStateManager stateManager;
 
-  Future<void> _build({
+  Future<void> build({
     required WidgetTester tester,
     List<PlutoColumn> columns = const [],
     List<PlutoRow> rows = const [],
@@ -87,7 +88,7 @@ void main() {
     final columns = ColumnHelper.textColumn('title', count: 10);
     final rows = RowHelper.count(10, columns);
 
-    await _build(
+    await build(
       tester: tester,
       columns: columns,
       rows: rows,
@@ -108,7 +109,7 @@ void main() {
     final columns = ColumnHelper.textColumn('title', count: 10);
     final rows = RowHelper.count(10, columns);
 
-    await _build(
+    await build(
       tester: tester,
       columns: columns,
       rows: rows,
@@ -129,7 +130,7 @@ void main() {
       final columns = ColumnHelper.textColumn('title', count: 10);
       final rows = RowHelper.count(10, columns);
 
-      await _build(
+      await build(
         tester: tester,
         columns: columns,
         rows: rows,
@@ -171,7 +172,7 @@ void main() {
       final columns = ColumnHelper.textColumn('title', count: 10);
       final rows = RowHelper.count(10, columns);
 
-      await _build(
+      await build(
         tester: tester,
         columns: columns,
         rows: rows,
@@ -213,7 +214,7 @@ void main() {
 
     PlutoGridOnChangedEvent? event;
 
-    await _build(
+    await build(
       tester: tester,
       columns: columns,
       rows: rows,
@@ -246,7 +247,7 @@ void main() {
 
     PlutoGridOnSelectedEvent? event;
 
-    await _build(
+    await build(
       tester: tester,
       columns: columns,
       rows: rows,
@@ -275,7 +276,7 @@ void main() {
 
     PlutoGridOnSelectedEvent? event;
 
-    await _build(
+    await build(
       tester: tester,
       columns: columns,
       rows: rows,
@@ -301,7 +302,7 @@ void main() {
 
     PlutoGridOnSortedEvent? event;
 
-    await _build(
+    await build(
       tester: tester,
       columns: columns,
       rows: rows,
@@ -347,7 +348,7 @@ void main() {
 
     PlutoGridOnRowCheckedEvent? event;
 
-    await _build(
+    await build(
       tester: tester,
       columns: columns,
       rows: rows,
@@ -378,7 +379,7 @@ void main() {
 
     PlutoGridOnRowDoubleTapEvent? event;
 
-    await _build(
+    await build(
       tester: tester,
       columns: columns,
       rows: rows,
@@ -406,7 +407,7 @@ void main() {
 
     PlutoGridOnRowSecondaryTapEvent? event;
 
-    await _build(
+    await build(
       tester: tester,
       columns: columns,
       rows: rows,
@@ -433,7 +434,7 @@ void main() {
 
     PlutoGridOnRowsMovedEvent? event;
 
-    await _build(
+    await build(
       tester: tester,
       columns: columns,
       rows: rows,
@@ -464,7 +465,7 @@ void main() {
 
     final headerKey = GlobalKey();
 
-    await _build(
+    await build(
       tester: tester,
       columns: columns,
       rows: rows,
@@ -484,7 +485,7 @@ void main() {
 
     final footerKey = GlobalKey();
 
-    await _build(
+    await build(
       tester: tester,
       columns: columns,
       rows: rows,
@@ -502,7 +503,7 @@ void main() {
     final columns = ColumnHelper.textColumn('title', count: 10);
     final rows = RowHelper.count(10, columns);
 
-    await _build(
+    await build(
       tester: tester,
       columns: columns,
       rows: rows,
@@ -540,7 +541,7 @@ void main() {
     final columns = ColumnHelper.textColumn('title', count: 10);
     final rows = RowHelper.count(10, columns);
 
-    await _build(
+    await build(
       tester: tester,
       columns: columns,
       rows: rows,
