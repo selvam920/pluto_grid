@@ -35,6 +35,7 @@ import 'feature/listing_mode_screen.dart';
 import 'feature/moving_screen.dart';
 import 'feature/number_type_column_screen.dart';
 import 'feature/row_color_screen.dart';
+import 'feature/row_group_screen.dart';
 import 'feature/row_moving_screen.dart';
 import 'feature/row_pagination_screen.dart';
 import 'feature/row_selection_screen.dart';
@@ -53,134 +54,137 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: LayoutBuilder(
-        builder: (ctx, size) {
-          return Stack(
-            children: [
-              Positioned.fill(
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xFF2E4370),
-                        Color(0xFF33C1E8),
-                      ],
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (ctx, size) {
+            return Stack(
+              children: [
+                Positioned.fill(
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xFF2E4370),
+                          Color(0xFF33C1E8),
+                        ],
+                      ),
                     ),
-                  ),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                            30,
-                            100,
-                            30,
-                            0,
-                          ),
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: PlutoGridTitle(
-                              fontSize: max(size.maxWidth / 20, 38),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                              30,
+                              100,
+                              30,
+                              0,
                             ),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 30,
-                          ),
-                          child: const PlutoTextColorAnimation(
-                            text: 'The DataGrid for Flutter.',
-                            fontSize: 20,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 50,
-                        ),
-                        Center(
-                          child: Column(
-                            children: [
-                              IconButton(
-                                icon: const FaIcon(FontAwesomeIcons.link),
-                                color: Colors.white,
-                                onPressed: () {
-                                  launchUrl(
-                                      'https://pub.dev/packages/pluto_grid');
-                                },
-                              ),
-                              const Text(
-                                'pub.dev',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const PlutoSection(
-                          title: 'Features',
-                          fontColor: Colors.white,
-                          child: PlutoFeatures(),
-                          // color: Colors.white,
-                        ),
-                        const PlutoSection(
-                          title: 'Contributors',
-                          fontColor: Colors.white,
-                          child: PlutoContributors(),
-                        ),
-                        const SizedBox(
-                          height: 50,
-                        ),
-                        Center(
-                          child: Column(
-                            children: [
-                              IconButton(
-                                icon: const FaIcon(FontAwesomeIcons.github),
-                                color: Colors.white,
-                                onPressed: () {
-                                  launchUrl(
-                                      'https://github.com/bosskmk/pluto_grid');
-                                },
-                              ),
-                              const Text(
-                                'Github',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 50,
-                        ),
-                        Center(
-                          child: MouseRegion(
-                            cursor: SystemMouseCursors.click,
-                            child: GestureDetector(
-                              onTap: () {
-                                launchUrl('https://www.buymeacoffee.com/manki');
-                              },
-                              child: Image.asset(
-                                'assets/images/buy_me_a_coffee.png',
-                                height: 60,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: PlutoGridTitle(
+                                fontSize: max(size.maxWidth / 20, 38),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 100,
-                        ),
-                      ],
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 30,
+                            ),
+                            child: const PlutoTextColorAnimation(
+                              text: 'The DataGrid for Flutter.',
+                              fontSize: 20,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          Center(
+                            child: Column(
+                              children: [
+                                IconButton(
+                                  icon: const FaIcon(FontAwesomeIcons.link),
+                                  color: Colors.white,
+                                  onPressed: () {
+                                    launchUrl(
+                                        'https://pub.dev/packages/pluto_grid');
+                                  },
+                                ),
+                                const Text(
+                                  'pub.dev',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const PlutoSection(
+                            title: 'Features',
+                            fontColor: Colors.white,
+                            child: PlutoFeatures(),
+                            // color: Colors.white,
+                          ),
+                          const PlutoSection(
+                            title: 'Contributors',
+                            fontColor: Colors.white,
+                            child: PlutoContributors(),
+                          ),
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          Center(
+                            child: Column(
+                              children: [
+                                IconButton(
+                                  icon: const FaIcon(FontAwesomeIcons.github),
+                                  color: Colors.white,
+                                  onPressed: () {
+                                    launchUrl(
+                                        'https://github.com/bosskmk/pluto_grid');
+                                  },
+                                ),
+                                const Text(
+                                  'Github',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          Center(
+                            child: MouseRegion(
+                              cursor: SystemMouseCursors.click,
+                              child: GestureDetector(
+                                onTap: () {
+                                  launchUrl(
+                                      'https://www.buymeacoffee.com/manki');
+                                },
+                                child: Image.asset(
+                                  'assets/images/buy_me_a_coffee.png',
+                                  height: 60,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 100,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -356,6 +360,14 @@ class PlutoFeatures extends StatelessWidget {
             },
           ),
           PlutoListTile(
+            title: 'Row group',
+            description: 'Grouping rows in a column or tree structure.',
+            onTapLiveDemo: () {
+              Navigator.pushNamed(context, RowGroupScreen.routeName);
+            },
+            trailing: newIcon,
+          ),
+          PlutoListTile(
             title: 'Row with checkbox',
             description: 'You can select rows with checkbox.',
             onTapLiveDemo: () {
@@ -497,31 +509,17 @@ class PlutoContributors extends StatelessWidget {
             },
           ),
           PlutoContributorTile(
-            name: 'Alexey Volkov',
+            name: 'Gian',
             linkTitle: 'Github',
             onTapLink: () {
-              launchUrl('https://github.com/ASGAlex');
+              launchUrl('https://github.com/Macacoazul01');
             },
           ),
           PlutoContributorTile(
-            name: 'MrCasCode',
+            name: 'Enrique Cardona',
             linkTitle: 'Github',
             onTapLink: () {
-              launchUrl('https://github.com/MrCasCode');
-            },
-          ),
-          PlutoContributorTile(
-            name: 'Wang Chuanbin',
-            linkTitle: 'Github',
-            onTapLink: () {
-              launchUrl('https://github.com/Chuanbin-Wang');
-            },
-          ),
-          PlutoContributorTile(
-            name: 'sheentim',
-            linkTitle: 'Github',
-            onTapLink: () {
-              launchUrl('https://github.com/sheentim');
+              launchUrl('https://github.com/henry2man');
             },
           ),
           PlutoContributorTile(
@@ -532,10 +530,66 @@ class PlutoContributors extends StatelessWidget {
             },
           ),
           PlutoContributorTile(
-            name: 'Enrique Cardona',
+            name: 'Wang Chuanbin',
             linkTitle: 'Github',
             onTapLink: () {
-              launchUrl('https://github.com/henry2man');
+              launchUrl('https://github.com/Chuanbin-Wang');
+            },
+          ),
+          PlutoContributorTile(
+            name: 'HasanCihatS',
+            linkTitle: 'Github',
+            onTapLink: () {
+              launchUrl('https://github.com/HasanCihatS');
+            },
+          ),
+          PlutoContributorTile(
+            name: 'Majed DH',
+            linkTitle: 'Github',
+            onTapLink: () {
+              launchUrl('https://github.com/MajedDH');
+            },
+          ),
+          PlutoContributorTile(
+            name: 'Matěj Žídek',
+            linkTitle: 'Github',
+            onTapLink: () {
+              launchUrl('https://github.com/mzdm');
+            },
+          ),
+          PlutoContributorTile(
+            name: 'Henrique Deodato',
+            linkTitle: 'Github',
+            onTapLink: () {
+              launchUrl('https://github.com/h3nr1ke');
+            },
+          ),
+          PlutoContributorTile(
+            name: 'tilongzs',
+            linkTitle: 'Github',
+            onTapLink: () {
+              launchUrl('https://github.com/tilongzs');
+            },
+          ),
+          PlutoContributorTile(
+            name: 'Alexey Volkov',
+            linkTitle: 'Github',
+            onTapLink: () {
+              launchUrl('https://github.com/ASGAlex');
+            },
+          ),
+          PlutoContributorTile(
+            name: 'Dmitry Sboychakov',
+            linkTitle: 'Github',
+            onTapLink: () {
+              launchUrl('https://github.com/DmitrySboychakov');
+            },
+          ),
+          PlutoContributorTile(
+            name: 'MrCasCode',
+            linkTitle: 'Github',
+            onTapLink: () {
+              launchUrl('https://github.com/MrCasCode');
             },
           ),
           PlutoContributorTile(
@@ -553,17 +607,10 @@ class PlutoContributors extends StatelessWidget {
             },
           ),
           PlutoContributorTile(
-            name: 'Majed DH',
+            name: 's-yanev',
             linkTitle: 'Github',
             onTapLink: () {
-              launchUrl('https://github.com/MajedDH');
-            },
-          ),
-          PlutoContributorTile(
-            name: 'Dmitry Sboychakov',
-            linkTitle: 'Github',
-            onTapLink: () {
-              launchUrl('https://github.com/DmitrySboychakov');
+              launchUrl('https://github.com/s-yanev');
             },
           ),
           PlutoContributorTile(
@@ -574,10 +621,17 @@ class PlutoContributors extends StatelessWidget {
             },
           ),
           PlutoContributorTile(
-            name: 'Matěj Žídek',
+            name: 'sheentim',
             linkTitle: 'Github',
             onTapLink: () {
-              launchUrl('https://github.com/mzdm');
+              launchUrl('https://github.com/sheentim');
+            },
+          ),
+          PlutoContributorTile(
+            name: 'Anders',
+            linkTitle: 'Github',
+            onTapLink: () {
+              launchUrl('https://github.com/RedRozio');
             },
           ),
           PlutoContributorTile.invisible(
