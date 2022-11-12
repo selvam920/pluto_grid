@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 import '../helper/column_helper.dart';
 import '../helper/row_helper.dart';
 import '../helper/test_helper_util.dart';
+import '../matcher/pluto_object_matcher.dart';
+import '../mock/mock_on_change_listener.dart';
 
 void main() {
   const columnWidth = PlutoGridSettings.columnWidth;
+
+  const ValueKey<String> sortableGestureKey = ValueKey(
+    'ColumnTitleSortableGesture',
+  );
 
   testWidgets(
     'Directionality 가 rtl 인 경우 rtl 상태가 적용 되어야 한다.',
@@ -242,23 +249,25 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    Finder headerInkWell = find.descendant(
-        of: find.byKey(columns.first.key), matching: find.byType(InkWell));
+    Finder sortableGesture = find.descendant(
+      of: find.byKey(columns.first.key),
+      matching: find.byKey(sortableGestureKey),
+    );
 
     // then
-    await tester.tap(headerInkWell);
+    await tester.tap(sortableGesture);
     // Ascending
     expect(rows[0].cells['header0']!.value, 'header0 value 0');
     expect(rows[1].cells['header0']!.value, 'header0 value 1');
     expect(rows[2].cells['header0']!.value, 'header0 value 2');
 
-    await tester.tap(headerInkWell);
+    await tester.tap(sortableGesture);
     // Descending
     expect(rows[0].cells['header0']!.value, 'header0 value 2');
     expect(rows[1].cells['header0']!.value, 'header0 value 1');
     expect(rows[2].cells['header0']!.value, 'header0 value 0');
 
-    await tester.tap(headerInkWell);
+    await tester.tap(sortableGesture);
     // Original
     expect(rows[0].cells['header0']!.value, 'header0 value 0');
     expect(rows[1].cells['header0']!.value, 'header0 value 1');
@@ -323,22 +332,24 @@ void main() {
     expect(rows[1].cells['header0']!.value, 'header0 value 1');
     expect(rows[2].cells['header0']!.value, 'header0 value 2');
 
-    Finder headerInkWell = find.descendant(
-        of: find.byKey(columns.first.key), matching: find.byType(InkWell));
+    Finder sortableGesture = find.descendant(
+      of: find.byKey(columns.first.key),
+      matching: find.byKey(sortableGestureKey),
+    );
 
-    await tester.tap(headerInkWell);
+    await tester.tap(sortableGesture);
     // Ascending
     expect(rows[0].cells['header0']!.value, 'header0 value 1');
     expect(rows[1].cells['header0']!.value, 'header0 value 2');
     expect(rows[2].cells['header0']!.value, 'header0 value 4');
 
-    await tester.tap(headerInkWell);
+    await tester.tap(sortableGesture);
     // Descending
     expect(rows[0].cells['header0']!.value, 'header0 value 4');
     expect(rows[1].cells['header0']!.value, 'header0 value 2');
     expect(rows[2].cells['header0']!.value, 'header0 value 1');
 
-    await tester.tap(headerInkWell);
+    await tester.tap(sortableGesture);
     // Original
     expect(rows[0].cells['header0']!.value, 'header0 value 4');
     expect(rows[1].cells['header0']!.value, 'header0 value 1');
@@ -1384,16 +1395,275 @@ void main() {
     expect(stateManager.currentCell!.value, 'column1 value 0');
   });
 
-  testWidgets(
-    '생성자를 호출 할 수 있어야 한다.',
-    (WidgetTester tester) async {
-      final PlutoGridOnChangedEvent onChangedEvent = PlutoGridOnChangedEvent(
-        columnIdx: null,
-        rowIdx: 1,
+  testWidgets('normal 모드에서 readOnly 모드로 변경 하면 셀이 편집 불가 상태가 되어야 한다.',
+      (tester) async {
+    final columns = ColumnHelper.textColumn('column', count: 10);
+    final rows = RowHelper.count(10, columns);
+    late final PlutoGridStateManager stateManager;
+    const ValueKey buttonKey = ValueKey('setReadOnly');
+    PlutoGridMode mode = PlutoGridMode.normal;
+
+    // when
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Material(
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return PlutoGrid(
+                columns: columns,
+                rows: rows,
+                mode: mode,
+                onLoaded: (e) => stateManager = e.stateManager,
+                createHeader: (s) => TextButton(
+                  key: buttonKey,
+                  onPressed: () {
+                    setState(() {
+                      mode = PlutoGridMode.readOnly;
+                    });
+                  },
+                  child: const Text('set readOnly'),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+
+    await tester.pump();
+
+    await tester.tap(find.text('column0 value 0'));
+    await tester.pump();
+    await tester.tap(find.text('column0 value 0'));
+    await tester.pump();
+    expect(stateManager.isEditing, true);
+
+    await tester.tap(find.byKey(buttonKey));
+    await tester.pumpAndSettle();
+    expect(stateManager.mode, PlutoGridMode.readOnly);
+    expect(stateManager.isEditing, false);
+  });
+
+  testWidgets('셀 값을 변경하면 onChanged 콜백이 호출 되어야 한다.', (tester) async {
+    final mock = MockMethods();
+    final columns = ColumnHelper.textColumn('column', count: 10);
+    final rows = RowHelper.count(10, columns);
+
+    // when
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Material(
+          child: PlutoGrid(
+            columns: columns,
+            rows: rows,
+            onChanged: mock.oneParamReturnVoid<PlutoGridOnChangedEvent>,
+          ),
+        ),
+      ),
+    );
+
+    await tester.pump();
+
+    final sampleCell = find.text('column1 value 2');
+
+    await tester.tap(sampleCell);
+    await tester.pump();
+    await tester.tap(sampleCell);
+    await tester.pump();
+
+    await tester.enterText(sampleCell, 'text');
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pump();
+
+    verify(mock.oneParamReturnVoid(
+        PlutoObjectMatcher<PlutoGridOnChangedEvent>(rule: (e) {
+      return e.row == rows[2] &&
+          e.column == columns[1] &&
+          e.rowIdx == 2 &&
+          e.columnIdx == 1 &&
+          e.value == 'text' &&
+          e.oldValue == 'column1 value 2';
+    }))).called(1);
+  });
+
+  testWidgets('컬럼을 좌측 고정 하면 onColumnsMoved 콜백이 호출 되어야 한다.', (tester) async {
+    final mock = MockMethods();
+    final columns = ColumnHelper.textColumn('column', count: 10);
+    final rows = RowHelper.count(10, columns);
+    late final PlutoGridStateManager stateManager;
+
+    // when
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Material(
+          child: PlutoGrid(
+            columns: columns,
+            rows: rows,
+            onLoaded: (e) => stateManager = e.stateManager,
+            onColumnsMoved:
+                mock.oneParamReturnVoid<PlutoGridOnColumnsMovedEvent>,
+          ),
+        ),
+      ),
+    );
+
+    stateManager.toggleFrozenColumn(columns[1], PlutoColumnFrozen.start);
+    await tester.pump();
+
+    verify(mock.oneParamReturnVoid(
+        PlutoObjectMatcher<PlutoGridOnColumnsMovedEvent>(rule: (e) {
+      return e.idx == 1 && e.visualIdx == 0 && e.columns.length == 1;
+    }))).called(1);
+  });
+
+  testWidgets('컬럼을 우측 고정 하면 onColumnsMoved 콜백이 호출 되어야 한다.', (tester) async {
+    final mock = MockMethods();
+    final columns = ColumnHelper.textColumn('column', count: 10);
+    final rows = RowHelper.count(10, columns);
+    late final PlutoGridStateManager stateManager;
+
+    // when
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Material(
+          child: PlutoGrid(
+            columns: columns,
+            rows: rows,
+            onLoaded: (e) => stateManager = e.stateManager,
+            onColumnsMoved:
+                mock.oneParamReturnVoid<PlutoGridOnColumnsMovedEvent>,
+          ),
+        ),
+      ),
+    );
+
+    stateManager.toggleFrozenColumn(columns[1], PlutoColumnFrozen.end);
+    await tester.pump();
+
+    verify(mock.oneParamReturnVoid(
+        PlutoObjectMatcher<PlutoGridOnColumnsMovedEvent>(rule: (e) {
+      return e.idx == 1 && e.visualIdx == 9 && e.columns.length == 1;
+    }))).called(1);
+  });
+
+  testWidgets('컬럼을 드래그하여 이동하면 onColumnsMoved 콜백이 호출 되어야 한다.', (tester) async {
+    final mock = MockMethods();
+    final columns = ColumnHelper.textColumn('column', count: 10);
+    final rows = RowHelper.count(10, columns);
+
+    // when
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Material(
+          child: PlutoGrid(
+            columns: columns,
+            rows: rows,
+            onColumnsMoved:
+                mock.oneParamReturnVoid<PlutoGridOnColumnsMovedEvent>,
+          ),
+        ),
+      ),
+    );
+
+    final sampleColumn = find.text('column1');
+
+    await tester.drag(sampleColumn, const Offset(400, 0));
+
+    await tester.pumpAndSettle(const Duration(milliseconds: 300));
+
+    verify(mock.oneParamReturnVoid(
+        PlutoObjectMatcher<PlutoGridOnColumnsMovedEvent>(rule: (e) {
+      return e.idx == 3 && e.visualIdx == 3 && e.columns.length == 1;
+    }))).called(1);
+  });
+
+  group('noRowsWidget', () {
+    testWidgets('행이 없는 경우 noRowsWidget 이 렌더링 되어야 한다.', (tester) async {
+      final columns = ColumnHelper.textColumn('column', count: 10);
+      final rows = <PlutoRow>[];
+      const noRowsWidget = Center(
+        key: ValueKey('NoRowsWidget'),
+        child: Text('There are no rows.'),
       );
 
-      expect(onChangedEvent.columnIdx, null);
-      expect(onChangedEvent.rowIdx, 1);
-    },
-  );
+      // when
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: PlutoGrid(
+              columns: columns,
+              rows: rows,
+              noRowsWidget: noRowsWidget,
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byKey(noRowsWidget.key!), findsOneWidget);
+    });
+
+    testWidgets('행을 삭제하는 경우 noRowsWidget 이 렌더링 되어야 한다.', (tester) async {
+      final columns = ColumnHelper.textColumn('column', count: 10);
+      final rows = RowHelper.count(10, columns);
+      late final PlutoGridStateManager stateManager;
+      const noRowsWidget = Center(
+        key: ValueKey('NoRowsWidget'),
+        child: Text('There are no rows.'),
+      );
+
+      // when
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: PlutoGrid(
+              columns: columns,
+              rows: rows,
+              onLoaded: (e) => stateManager = e.stateManager,
+              noRowsWidget: noRowsWidget,
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byKey(noRowsWidget.key!), findsNothing);
+
+      stateManager.removeAllRows();
+
+      await tester.pump(const Duration(milliseconds: 350));
+
+      expect(find.byKey(noRowsWidget.key!), findsOneWidget);
+    });
+
+    testWidgets('행을 추가하는 경우 noRowsWidget 이 렌더링 되지 않아야 한다.', (tester) async {
+      final columns = ColumnHelper.textColumn('column', count: 10);
+      final rows = <PlutoRow>[];
+      late final PlutoGridStateManager stateManager;
+      const noRowsWidget = Center(
+        key: ValueKey('NoRowsWidget'),
+        child: Text('There are no rows.'),
+      );
+
+      // when
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: PlutoGrid(
+              columns: columns,
+              rows: rows,
+              onLoaded: (e) => stateManager = e.stateManager,
+              noRowsWidget: noRowsWidget,
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byKey(noRowsWidget.key!), findsOneWidget);
+
+      stateManager.appendNewRows();
+
+      await tester.pumpAndSettle(const Duration(milliseconds: 350));
+
+      expect(find.byKey(noRowsWidget.key!), findsNothing);
+    });
+  });
 }

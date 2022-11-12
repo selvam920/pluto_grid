@@ -20,11 +20,11 @@ abstract class PopupCell extends StatefulWidget {
 }
 
 abstract class GridPopupProps {
-  List<PlutoColumn> popupColumns = [];
+  List<PlutoColumn> get popupColumns;
 
-  List<PlutoRow> popupRows = [];
+  List<PlutoRow> get popupRows;
 
-  Icon? icon;
+  IconData? get icon;
 }
 
 mixin PopupCellState<T extends PopupCell> on State<T>
@@ -98,9 +98,10 @@ mixin PopupCellState<T extends PopupCell> on State<T>
       createHeader: createHeader,
       createFooter: createFooter,
       configuration: widget.stateManager.configuration.copyWith(
+        tabKeyAction: PlutoGridTabKeyAction.normal,
         style: widget.stateManager.configuration.style.copyWith(
-          oddRowColor: PlutoOptional(null),
-          evenRowColor: PlutoOptional(null),
+          oddRowColor: const PlutoOptional(null),
+          evenRowColor: const PlutoOptional(null),
           gridBorderRadius:
               widget.stateManager.configuration.style.gridPopupBorderRadius,
           defaultColumnTitlePadding: PlutoGridSettings.columnTitlePadding,
@@ -223,12 +224,14 @@ mixin PopupCellState<T extends PopupCell> on State<T>
           borderSide: BorderSide.none,
         ),
         contentPadding: EdgeInsets.zero,
-        suffixIcon: IconButton(
-          icon: icon!,
-          color: widget.stateManager.configuration.style.iconColor,
-          iconSize: widget.stateManager.configuration.style.iconSize,
-          onPressed: openPopup,
-        ),
+        suffixIcon: icon == null
+            ? null
+            : IconButton(
+                icon: Icon(icon),
+                color: widget.stateManager.configuration.style.iconColor,
+                iconSize: widget.stateManager.configuration.style.iconSize,
+                onPressed: openPopup,
+              ),
       ),
       maxLines: 1,
       textAlignVertical: TextAlignVertical.center,

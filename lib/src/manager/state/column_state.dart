@@ -357,6 +357,14 @@ mixin ColumnState implements IPlutoGridState {
 
     updateVisibilityLayout();
 
+    if (onColumnsMoved != null) {
+      onColumnsMoved!(PlutoGridOnColumnsMovedEvent(
+        idx: refColumns.indexOf(column),
+        visualIdx: columnIndex(column)!,
+        columns: [column],
+      ));
+    }
+
     notifyListeners(true, toggleFrozenColumn.hashCode);
   }
 
@@ -510,6 +518,14 @@ mixin ColumnState implements IPlutoGridState {
 
     updateVisibilityLayout();
 
+    if (onColumnsMoved != null) {
+      onColumnsMoved!(PlutoGridOnColumnsMovedEvent(
+        idx: targetIndex,
+        visualIdx: columnIndex(columnToMove)!,
+        columns: [columnToMove],
+      ));
+    }
+
     notifyListeners(true, moveColumn.hashCode);
   }
 
@@ -634,6 +650,8 @@ mixin ColumnState implements IPlutoGridState {
 
     column.sort = PlutoColumnSort.ascending;
 
+    if (sortOnlyEvent) return;
+
     compare(a, b) => column.type.compare(
           a.cells[column.field]!.valueForSorting,
           b.cells[column.field]!.valueForSorting,
@@ -654,6 +672,8 @@ mixin ColumnState implements IPlutoGridState {
 
     column.sort = PlutoColumnSort.descending;
 
+    if (sortOnlyEvent) return;
+
     compare(b, a) => column.type.compare(
           a.cells[column.field]!.valueForSorting,
           b.cells[column.field]!.valueForSorting,
@@ -671,6 +691,8 @@ mixin ColumnState implements IPlutoGridState {
   @override
   void sortBySortIdx(PlutoColumn column, {bool notify = true}) {
     _updateBeforeColumnSort();
+
+    if (sortOnlyEvent) return;
 
     int compare(a, b) {
       if (a.sortIdx == null || b.sortIdx == null) {
@@ -742,8 +764,8 @@ mixin ColumnState implements IPlutoGridState {
         style: configuration.style.copyWith(
           gridBorderRadius: configuration.style.gridPopupBorderRadius,
           enableRowColorAnimation: false,
-          oddRowColor: PlutoOptional(null),
-          evenRowColor: PlutoOptional(null),
+          oddRowColor: const PlutoOptional(null),
+          evenRowColor: const PlutoOptional(null),
         ),
       ),
       columns: columns,
@@ -877,6 +899,12 @@ mixin ColumnState implements IPlutoGridState {
 
   /// [PlutoGrid.onSorted] Called when a callback is registered.
   void _callOnSorted(PlutoColumn column, PlutoColumnSort oldSort) {
+    if (sortOnlyEvent) {
+      eventManager!.addEvent(
+        PlutoGridChangeColumnSortEvent(column: column, oldSort: oldSort),
+      );
+    }
+
     if (onSorted == null) {
       return;
     }

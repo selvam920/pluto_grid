@@ -39,19 +39,29 @@ mixin FilteringRowState implements IPlutoGridState {
   List<PlutoRow> get filterRows => _state._filterRows;
 
   @override
-  bool get hasFilter => refRows.hasFilter;
+  bool get hasFilter =>
+      refRows.hasFilter || (filterOnlyEvent && filterRows.isNotEmpty);
 
   @override
   void setFilter(FilteredListFilter<PlutoRow>? filter, {bool notify = true}) {
+    if (filter == null) {
+      setFilterRows([]);
+    }
+
+    if (filterOnlyEvent) {
+      eventManager!.addEvent(
+        PlutoGridSetColumnFilterEvent(filterRows: filterRows),
+      );
+      return;
+    }
+
     for (final row in iterateAllRowAndGroup) {
       row.setState(PlutoRowState.none);
     }
 
     var savedFilter = filter;
 
-    if (filter == null) {
-      setFilterRows([]);
-    } else {
+    if (filter != null) {
       savedFilter = (PlutoRow row) {
         return !row.state.isNone || filter(row);
       };
@@ -161,8 +171,8 @@ mixin FilteringRowState implements IPlutoGridState {
           style: configuration.style.copyWith(
             gridBorderRadius: configuration.style.gridPopupBorderRadius,
             enableRowColorAnimation: false,
-            oddRowColor: PlutoOptional(null),
-            evenRowColor: PlutoOptional(null),
+            oddRowColor: const PlutoOptional(null),
+            evenRowColor: const PlutoOptional(null),
           ),
         ),
         handleAddNewFilter: (filterState) {

@@ -38,11 +38,17 @@ class PlutoGridPopup {
   /// {@macro pluto_grid_property_onRowsMoved}
   final PlutoOnRowsMovedEventCallback? onRowsMoved;
 
+  /// {@macro pluto_grid_property_onColumnsMoved}
+  final PlutoOnColumnsMovedEventCallback? onColumnsMoved;
+
   /// {@macro pluto_grid_property_createHeader}
   final CreateHeaderCallBack? createHeader;
 
   /// {@macro pluto_grid_property_createFooter}
   final CreateFooterCallBack? createFooter;
+
+  /// {@macro pluto_grid_property_noRowsWidget}
+  final Widget? noRowsWidget;
 
   /// {@macro pluto_grid_property_rowColorCallback}
   final PlutoRowColorCallback? rowColorCallback;
@@ -51,7 +57,7 @@ class PlutoGridPopup {
   final PlutoColumnMenuDelegate? columnMenuDelegate;
 
   /// {@macro pluto_grid_property_configuration}
-  final PlutoGridConfiguration? configuration;
+  final PlutoGridConfiguration configuration;
 
   /// Execution mode of [PlutoGrid].
   ///
@@ -63,7 +69,7 @@ class PlutoGridPopup {
   ///
   /// [PlutoGridMode.popup]
   /// {@macro pluto_grid_mode_popup}
-  final PlutoGridMode? mode;
+  final PlutoGridMode mode;
 
   final double? width;
 
@@ -82,12 +88,14 @@ class PlutoGridPopup {
     this.onRowDoubleTap,
     this.onRowSecondaryTap,
     this.onRowsMoved,
+    this.onColumnsMoved,
     this.createHeader,
     this.createFooter,
+    this.noRowsWidget,
     this.rowColorCallback,
     this.columnMenuDelegate,
-    this.configuration,
-    this.mode,
+    this.configuration = const PlutoGridConfiguration(),
+    this.mode = PlutoGridMode.normal,
     this.width,
     this.height,
   }) {
@@ -95,16 +103,20 @@ class PlutoGridPopup {
   }
 
   Future<void> open() async {
+    final textDirection = Directionality.of(context);
+
+    final borderRadius = configuration.style.gridBorderRadius.resolve(
+      textDirection,
+    );
+
     PlutoGridOnSelectedEvent? selected =
         await showDialog<PlutoGridOnSelectedEvent>(
             context: context,
             builder: (BuildContext ctx) {
               return Dialog(
-                shape: configuration?.style.gridBorderRadius != null
-                    ? RoundedRectangleBorder(
-                        borderRadius: configuration!.style.gridBorderRadius,
-                      )
-                    : null,
+                shape: borderRadius == BorderRadius.zero
+                    ? null
+                    : RoundedRectangleBorder(borderRadius: borderRadius),
                 child: LayoutBuilder(
                   builder: (ctx, size) {
                     return SizedBox(
@@ -112,7 +124,7 @@ class PlutoGridPopup {
                           PlutoGridSettings.gridInnerSpacing,
                       height: height ?? size.maxHeight,
                       child: Directionality(
-                        textDirection: Directionality.of(context),
+                        textDirection: textDirection,
                         child: PlutoGrid(
                           columns: columns,
                           rows: rows,
@@ -127,8 +139,10 @@ class PlutoGridPopup {
                           onRowDoubleTap: onRowDoubleTap,
                           onRowSecondaryTap: onRowSecondaryTap,
                           onRowsMoved: onRowsMoved,
+                          onColumnsMoved: onColumnsMoved,
                           createHeader: createHeader,
                           createFooter: createFooter,
+                          noRowsWidget: noRowsWidget,
                           rowColorCallback: rowColorCallback,
                           columnMenuDelegate: columnMenuDelegate,
                           configuration: configuration,

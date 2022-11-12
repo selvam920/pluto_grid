@@ -169,6 +169,11 @@ class PlutoNotifierFilterResolverDefault
       case PlutoLeftFrozenRows:
       case PlutoRightFrozenRows:
         return defaultRowsFilter(stateManager);
+      case PlutoNoRowsWidget:
+        return {
+          ...defaultRowsFilter(stateManager),
+          stateManager.setShowLoading.hashCode,
+        };
       case PlutoAggregateColumnFooter:
         return defaultAggregateColumnFooterFilter(stateManager);
       case CheckboxSelectionWidget:
@@ -188,6 +193,10 @@ class PlutoNotifierFilterResolverDefault
       stateManager.setShowColumnGroups.hashCode,
       stateManager.setShowLoading.hashCode,
       stateManager.toggleFrozenColumn.hashCode,
+      stateManager.insertColumns.hashCode,
+      stateManager.removeColumns.hashCode,
+      stateManager.moveColumn.hashCode,
+      stateManager.hideColumn.hashCode,
       stateManager.performLayoutOnPostFrame.hashCode,
     };
   }

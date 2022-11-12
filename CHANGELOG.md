@@ -1,3 +1,28 @@
+## [5.4.0] - 2022. 11. 5
+
+* Add shortcut to PlutoGridConfiguration.  
+  https://pluto.weblaze.dev/shortcuts
+* Add popupIcon for popup type column.  
+  You can change the icon that appears on the right of the date, time, or selection type column cell or set it to null to remove it.
+
+## [5.3.2] - 2022. 11. 2
+
+* Add onColumnsMoved, noRowsWidget.
+
+## [5.3.1] - 2022. 10. 30
+
+* Add readOnly, multiSelect modes to PlutoGridMode.
+* Fix Bug showing filter icon when filterOnlyEvent is true.
+
+## [5.3.0] - 2022. 10. 22
+
+* Add PlutoLazyPagination, PlutoInfinityScrollRows for server-side pagination.
+* Add tabKeyAction to PlutoGridConfiguration.
+
+## [5.2.1] - 2022. 10. 19
+
+* Add pageSizeToMove to PlutoPagination.
+
 ## [5.2.0] - 2022. 10. 16
 
 * Add row group.

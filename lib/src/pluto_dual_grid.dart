@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
@@ -41,7 +43,7 @@ class PlutoDualGrid extends StatefulWidget {
 
   final PlutoDualGridProps gridPropsB;
 
-  final PlutoGridMode? mode;
+  final PlutoGridMode mode;
 
   final PlutoDualOnSelectedEventCallback? onSelected;
 
@@ -62,7 +64,7 @@ class PlutoDualGrid extends StatefulWidget {
   const PlutoDualGrid({
     required this.gridPropsA,
     required this.gridPropsB,
-    this.mode,
+    this.mode = PlutoGridMode.normal,
     this.onSelected,
     this.display,
     this.divider = const PlutoDualGridDivider(),
@@ -87,9 +89,13 @@ class PlutoDualGridState extends State<PlutoDualGrid> {
 
   late final PlutoDualGridDisplay display;
 
-  PlutoGridStateManager? _stateManagerA;
+  late final PlutoGridStateManager _stateManagerA;
 
-  PlutoGridStateManager? _stateManagerB;
+  late final PlutoGridStateManager _stateManagerB;
+
+  late final StreamSubscription<PlutoGridEvent> _streamA;
+
+  late final StreamSubscription<PlutoGridEvent> _streamB;
 
   @override
   void initState() {
@@ -98,83 +104,97 @@ class PlutoDualGridState extends State<PlutoDualGrid> {
     display = widget.display ?? PlutoDualGridDisplayRatio();
   }
 
+  @override
+  void dispose() {
+    _streamA.cancel();
+
+    _streamB.cancel();
+
+    super.dispose();
+  }
+
   Widget _buildGrid({
     required PlutoDualGridProps props,
-    PlutoGridMode? mode,
-    double? width,
-    bool? isGridA,
+    required bool isGridA,
+    required PlutoGridMode mode,
   }) {
     return LayoutId(
       id: isGridA == true ? _PlutoDualGridId.gridA : _PlutoDualGridId.gridB,
-      child: SizedBox(
-        width: width,
-        child: PlutoGrid(
-          columns: props.columns,
-          rows: props.rows,
-          columnGroups: props.columnGroups,
-          onLoaded: (PlutoGridOnLoadedEvent onLoadedEvent) {
-            if (isGridA!) {
-              _stateManagerA = onLoadedEvent.stateManager;
-            } else {
-              _stateManagerB = onLoadedEvent.stateManager;
-            }
+      child: PlutoGrid(
+        columns: props.columns,
+        rows: props.rows,
+        columnGroups: props.columnGroups,
+        onLoaded: (PlutoGridOnLoadedEvent onLoadedEvent) {
+          if (isGridA) {
+            _stateManagerA = onLoadedEvent.stateManager;
+          } else {
+            _stateManagerB = onLoadedEvent.stateManager;
+          }
 
-            onLoadedEvent.stateManager.eventManager!
-                .listener((PlutoGridEvent plutoEvent) {
-              if (plutoEvent is PlutoGridCannotMoveCurrentCellEvent) {
-                if (isGridA == true && plutoEvent.direction.isRight) {
-                  _stateManagerA!.setKeepFocus(false);
-                  _stateManagerB!.setKeepFocus(true);
-                } else if (isGridA != true && plutoEvent.direction.isLeft) {
-                  _stateManagerA!.setKeepFocus(true);
-                  _stateManagerB!.setKeepFocus(false);
-                }
+          handleEvent(PlutoGridEvent plutoEvent) {
+            if (plutoEvent is PlutoGridCannotMoveCurrentCellEvent) {
+              if (isGridA == true && plutoEvent.direction.isRight) {
+                _stateManagerA.setKeepFocus(false);
+                _stateManagerB.setKeepFocus(true);
+              } else if (isGridA != true && plutoEvent.direction.isLeft) {
+                _stateManagerA.setKeepFocus(true);
+                _stateManagerB.setKeepFocus(false);
               }
-            });
+            }
+          }
 
-            if (props.onLoaded != null) {
-              props.onLoaded!(onLoadedEvent);
-            }
-          },
-          onChanged: props.onChanged,
-          onSelected: (PlutoGridOnSelectedEvent onSelectedEvent) {
-            if (onSelectedEvent.row == null || onSelectedEvent.cell == null) {
-              widget.onSelected!(
-                PlutoDualOnSelectedEvent(
-                  gridA: null,
-                  gridB: null,
+          if (isGridA) {
+            _streamA =
+                onLoadedEvent.stateManager.eventManager!.listener(handleEvent);
+          } else {
+            _streamB =
+                onLoadedEvent.stateManager.eventManager!.listener(handleEvent);
+          }
+
+          if (props.onLoaded != null) {
+            props.onLoaded!(onLoadedEvent);
+          }
+        },
+        onChanged: props.onChanged,
+        onSelected: (PlutoGridOnSelectedEvent onSelectedEvent) {
+          if (onSelectedEvent.row == null || onSelectedEvent.cell == null) {
+            widget.onSelected!(
+              PlutoDualOnSelectedEvent(
+                gridA: null,
+                gridB: null,
+              ),
+            );
+          } else {
+            widget.onSelected!(
+              PlutoDualOnSelectedEvent(
+                gridA: PlutoGridOnSelectedEvent(
+                  row: _stateManagerA.currentRow,
+                  rowIdx: _stateManagerA.currentRowIdx,
+                  cell: _stateManagerA.currentCell,
                 ),
-              );
-            } else {
-              widget.onSelected!(
-                PlutoDualOnSelectedEvent(
-                  gridA: PlutoGridOnSelectedEvent(
-                    row: _stateManagerA!.currentRow,
-                    rowIdx: _stateManagerA!.currentRowIdx,
-                    cell: _stateManagerA!.currentCell,
-                  ),
-                  gridB: PlutoGridOnSelectedEvent(
-                    row: _stateManagerB!.currentRow,
-                    rowIdx: _stateManagerB!.currentRowIdx,
-                    cell: _stateManagerB!.currentCell,
-                  ),
+                gridB: PlutoGridOnSelectedEvent(
+                  row: _stateManagerB.currentRow,
+                  rowIdx: _stateManagerB.currentRowIdx,
+                  cell: _stateManagerB.currentCell,
                 ),
-              );
-            }
-          },
-          onSorted: props.onSorted,
-          onRowChecked: props.onRowChecked,
-          onRowDoubleTap: props.onRowDoubleTap,
-          onRowSecondaryTap: props.onRowSecondaryTap,
-          onRowsMoved: props.onRowsMoved,
-          createHeader: props.createHeader,
-          createFooter: props.createFooter,
-          rowColorCallback: props.rowColorCallback,
-          columnMenuDelegate: props.columnMenuDelegate,
-          configuration: props.configuration,
-          mode: mode,
-          key: props.key,
-        ),
+              ),
+            );
+          }
+        },
+        onSorted: props.onSorted,
+        onRowChecked: props.onRowChecked,
+        onRowDoubleTap: props.onRowDoubleTap,
+        onRowSecondaryTap: props.onRowSecondaryTap,
+        onRowsMoved: props.onRowsMoved,
+        onColumnsMoved: props.onColumnsMoved,
+        createHeader: props.createHeader,
+        createFooter: props.createFooter,
+        noRowsWidget: props.noRowsWidget,
+        rowColorCallback: props.rowColorCallback,
+        columnMenuDelegate: props.columnMenuDelegate,
+        configuration: props.configuration,
+        mode: mode,
+        key: props.key,
       ),
     );
   }
@@ -193,9 +213,8 @@ class PlutoDualGridState extends State<PlutoDualGrid> {
       children: [
         _buildGrid(
           props: widget.gridPropsA,
-          mode: widget.mode,
-          width: 100,
           isGridA: true,
+          mode: widget.mode,
         ),
         if (widget.divider.show == true)
           LayoutId(
@@ -221,9 +240,8 @@ class PlutoDualGridState extends State<PlutoDualGrid> {
           ),
         _buildGrid(
           props: widget.gridPropsB,
-          mode: widget.mode,
-          width: 100,
           isGridA: false,
+          mode: widget.mode,
         ),
       ],
     );
@@ -514,11 +532,17 @@ class PlutoDualGridProps {
   /// {@macro pluto_grid_property_onRowsMoved}
   final PlutoOnRowsMovedEventCallback? onRowsMoved;
 
+  /// {@macro pluto_grid_property_onColumnsMoved}
+  final PlutoOnColumnsMovedEventCallback? onColumnsMoved;
+
   /// {@macro pluto_grid_property_createHeader}
   final CreateHeaderCallBack? createHeader;
 
   /// {@macro pluto_grid_property_createFooter}
   final CreateFooterCallBack? createFooter;
+
+  /// {@macro pluto_grid_property_noRowsWidget}
+  final Widget? noRowsWidget;
 
   /// {@macro pluto_grid_property_rowColorCallback}
   final PlutoRowColorCallback? rowColorCallback;
@@ -554,8 +578,10 @@ class PlutoDualGridProps {
     this.onRowDoubleTap,
     this.onRowSecondaryTap,
     this.onRowsMoved,
+    this.onColumnsMoved,
     this.createHeader,
     this.createFooter,
+    this.noRowsWidget,
     this.rowColorCallback,
     this.columnMenuDelegate,
     this.configuration = const PlutoGridConfiguration(),
@@ -574,8 +600,10 @@ class PlutoDualGridProps {
     PlutoOptional<PlutoOnRowDoubleTapEventCallback?>? onRowDoubleTap,
     PlutoOptional<PlutoOnRowSecondaryTapEventCallback?>? onRowSecondaryTap,
     PlutoOptional<PlutoOnRowsMovedEventCallback?>? onRowsMoved,
+    PlutoOptional<PlutoOnColumnsMovedEventCallback?>? onColumnsMoved,
     PlutoOptional<CreateHeaderCallBack?>? createHeader,
     PlutoOptional<CreateFooterCallBack?>? createFooter,
+    PlutoOptional<Widget?>? noRowsWidget,
     PlutoOptional<PlutoRowColorCallback?>? rowColorCallback,
     PlutoOptional<PlutoColumnMenuDelegate?>? columnMenuDelegate,
     PlutoGridConfiguration? configuration,
@@ -598,10 +626,14 @@ class PlutoDualGridProps {
           ? this.onRowSecondaryTap
           : onRowSecondaryTap.value,
       onRowsMoved: onRowsMoved == null ? this.onRowsMoved : onRowsMoved.value,
+      onColumnsMoved:
+          onColumnsMoved == null ? this.onColumnsMoved : onColumnsMoved.value,
       createHeader:
           createHeader == null ? this.createHeader : createHeader.value,
       createFooter:
           createFooter == null ? this.createFooter : createFooter.value,
+      noRowsWidget:
+          noRowsWidget == null ? this.noRowsWidget : noRowsWidget.value,
       rowColorCallback: rowColorCallback == null
           ? this.rowColorCallback
           : rowColorCallback.value,
