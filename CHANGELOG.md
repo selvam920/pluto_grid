@@ -1,3 +1,22 @@
+## [5.4.7] - 2022. 12. 2
+
+* Fix sorting bug.  
+  Fixed sorting issue with pagination applied.  
+  https://github.com/bosskmk/pluto_grid/issues/668
+
+## [5.4.6] - 2022. 11. 30
+
+* Fix keepAlive.  
+  Fixed a bug that slowed down when moving horizontally/vertically   
+  with the keyboard direction keys for a long time in succession.
+
+## [5.4.5] - 2022. 11. 30
+
+* Fix RTL initiation flicker.   
+  By https://github.com/Milad-Akarie
+* Fix column context menu is triggered after drag (column resizing).  
+  By https://github.com/Milad-Akarie
+
 ## [5.4.4] - 2022. 11. 29
 
 * Add hovered scrollbar.
