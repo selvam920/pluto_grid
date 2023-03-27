@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pluto_grid/pluto_grid.dart';
-import 'package:pluto_grid/src/helper/platform_helper.dart';
 
 abstract class TextCell extends StatefulWidget {
   final PlutoGridStateManager stateManager;
@@ -53,6 +52,9 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
     super.initState();
 
     cellFocus = FocusNode(onKey: _handleOnKey);
+    cellFocus.addListener(() {
+      print("Has focus: ${cellFocus.hasFocus}");
+    });
 
     widget.stateManager.setTextEditingController(_textController);
 
@@ -87,7 +89,8 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
     _textController.dispose();
 
     cellFocus.dispose();
-
+    print('dispose called');
+    widget.stateManager.keyManager!.eventResult.reset();
     super.dispose();
   }
 
@@ -165,11 +168,10 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
     _changeValue();
 
     _handleOnChanged(old);
-
-    PlatformHelper.onMobile(() {
-      widget.stateManager.setKeepFocus(false);
-      FocusScope.of(context).requestFocus(FocusNode());
-    });
+    // PlatformHelper.onMobile(() {
+    //   widget.stateManager.setKeepFocus(false);
+    //   FocusScope.of(context).requestFocus(FocusNode());
+    // });
   }
 
   KeyEventResult _handleOnKey(FocusNode node, RawKeyEvent event) {
@@ -208,14 +210,12 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       _handleOnComplete();
       return KeyEventResult.ignored;
     }
-
     // ESC 는 편집된 문자열을 원래 문자열로 돌이킨다.
-    if (keyManager.isEsc) {
+    else if (keyManager.isEsc) {
       _restoreText();
+    } else {
+      widget.stateManager.keyManager!.subject.add(keyManager);
     }
-
-    // KeyManager 로 이벤트 처리를 위임 한다.
-    widget.stateManager.keyManager!.subject.add(keyManager);
 
     // 모든 이벤트를 처리 하고 이벤트 전파를 중단한다.
     return KeyEventResult.handled;

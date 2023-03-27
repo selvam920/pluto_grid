@@ -345,33 +345,65 @@ class _RowContainerWidgetState extends PlutoStateWithChange<_RowContainerWidget>
     return _AnimatedOrNormalContainer(
       enable: widget.enableRowColorAnimation,
       decoration: _decoration,
+      hoverColor: stateManager.configuration.style.activatedColor,
       child: widget.child,
     );
   }
 }
 
-class _AnimatedOrNormalContainer extends StatelessWidget {
+class _AnimatedOrNormalContainer extends StatefulWidget {
   final bool enable;
 
   final Widget child;
 
   final BoxDecoration decoration;
+  final Color hoverColor;
 
   const _AnimatedOrNormalContainer({
     required this.enable,
     required this.child,
     required this.decoration,
+    required this.hoverColor,
     Key? key,
   }) : super(key: key);
 
   @override
+  State<_AnimatedOrNormalContainer> createState() =>
+      _AnimatedOrNormalContainerState();
+}
+
+class _AnimatedOrNormalContainerState
+    extends State<_AnimatedOrNormalContainer> {
+  bool _isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return enable
+    final wrappedChild = MouseRegion(
+      onEnter: (_) {
+        setState(() {
+          _isHovered = true;
+        });
+      },
+      onExit: (_) {
+        setState(() {
+          _isHovered = false;
+        });
+      },
+      child: widget.child,
+    );
+
+    final decoration = widget.decoration.copyWith(
+      color: _isHovered
+          ? widget.hoverColor.withOpacity(0.4)
+          : widget.decoration.color,
+    );
+
+    return widget.enable
         ? AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             decoration: decoration,
-            child: child,
+            child: wrappedChild,
           )
-        : DecoratedBox(decoration: decoration, child: child);
+        : DecoratedBox(decoration: decoration, child: wrappedChild);
   }
 }

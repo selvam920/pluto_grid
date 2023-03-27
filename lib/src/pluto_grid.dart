@@ -6,7 +6,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' show Intl;
 import 'package:pluto_grid/pluto_grid.dart';
 
-import 'helper/platform_helper.dart';
 import 'ui/ui.dart';
 
 typedef PlutoOnLoadedEventCallback = void Function(
@@ -594,7 +593,7 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
   }
 
   KeyEventResult _handleGridFocusOnKey(FocusNode focusNode, RawKeyEvent event) {
-    if (_keyManager.eventResult.isSkip == false) {
+    if (!_keyManager.eventResult.isSkip) {
       _keyManager.subject.add(PlutoKeyManagerEvent(
         focusNode: focusNode,
         event: event,
@@ -607,6 +606,7 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
   @override
   Widget build(BuildContext context) {
     return FocusScope(
+      autofocus: true,
       onFocusChange: _stateManager.setKeepFocus,
       onKey: _handleGridFocusOnKey,
       child: _GridContainer(
@@ -1217,7 +1217,7 @@ class _GridContainer extends StatelessWidget {
       focusNode: stateManager.gridFocusNode,
       child: ScrollConfiguration(
         behavior: PlutoScrollBehavior(
-          isMobile: PlatformHelper.isMobile,
+          isMobile: false,
           userDragDevices: stateManager.configuration.scrollbar.dragDevices,
         ),
         child: DecoratedBox(

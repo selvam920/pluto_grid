@@ -33,10 +33,11 @@ class PlutoGridExamplePage extends StatefulWidget {
 class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
   final List<PlutoColumn> columns = <PlutoColumn>[
     PlutoColumn(
-      title: 'Id',
-      field: 'id',
-      type: PlutoColumnType.text(),
-    ),
+        title: 'Id',
+        field: 'id',
+        type: PlutoColumnType.text(),
+        enableEditingMode: true,
+        enableAutoEditing: true),
     PlutoColumn(
       title: 'Name',
       field: 'name',
@@ -158,7 +159,13 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
           onChanged: (PlutoGridOnChangedEvent event) {
             print(event);
           },
-          configuration: const PlutoGridConfiguration(),
+          configuration: const PlutoGridConfiguration(
+              tabKeyAction: PlutoGridTabKeyAction.moveToNextOnEdge,
+              enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveRight,
+              enableMoveHorizontalInEditing: true,
+              style: PlutoGridStyleConfig(
+                  activatedColor: Color.fromARGB(255, 247, 193, 255),
+                  activatedBorderColor: Colors.purple)),
         ),
       ),
     );

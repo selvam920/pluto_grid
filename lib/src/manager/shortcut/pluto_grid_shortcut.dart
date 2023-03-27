@@ -30,13 +30,27 @@ class PlutoGridShortcut {
     required RawKeyboard state,
   }) {
     for (final action in actions.entries) {
-      if (action.key.accepts(keyEvent.event, state)) {
+      if (accepts(action.key, keyEvent.event, state)) {
         action.value.execute(keyEvent: keyEvent, stateManager: stateManager);
         return true;
       }
     }
 
     return false;
+  }
+
+  static bool accepts(
+      ShortcutActivator key, RawKeyEvent event, RawKeyboard state) {
+    if (event is! RawKeyDownEvent) {
+      return false;
+    }
+    var keypressed = (state.keysPressed);
+    keypressed.removeWhere((element) => element == LogicalKeyboardKey.numLock);
+
+    final bool keysEqual =
+        keypressed.difference(key.triggers!.toSet()).isEmpty &&
+            key.triggers!.toSet().length == keypressed.length;
+    return keysEqual;
   }
 
   static final Map<ShortcutActivator, PlutoGridShortcutAction> defaultActions =

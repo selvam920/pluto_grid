@@ -34,6 +34,11 @@ class PlutoGridKeyEventResult {
 
     return result;
   }
+
+  KeyEventResult reset() {
+    _skip = false;
+    return KeyEventResult.handled;
+  }
 }
 
 class PlutoGridKeyManager {
@@ -56,7 +61,6 @@ class PlutoGridKeyManager {
 
   void dispose() {
     _subscription.cancel();
-
     _subject.close();
   }
 
