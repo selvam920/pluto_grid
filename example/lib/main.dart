@@ -160,7 +160,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
             print(event);
           },
           configuration: const PlutoGridConfiguration(
-              enterKeyAction: PlutoGridEnterKeyAction.none,
+              enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveRight,
               enableMoveHorizontalInEditing: true,
               enableHover: false,
               style: PlutoGridStyleConfig(

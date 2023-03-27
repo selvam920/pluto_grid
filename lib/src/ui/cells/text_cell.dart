@@ -52,10 +52,6 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
     super.initState();
 
     cellFocus = FocusNode(onKey: _handleOnKey);
-    cellFocus.addListener(() {
-      print("Has focus: ${cellFocus.hasFocus}");
-    });
-
     widget.stateManager.setTextEditingController(_textController);
 
     _textController.text = formattedValue;
@@ -89,8 +85,6 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
     _textController.dispose();
 
     cellFocus.dispose();
-    print('dispose called');
-    widget.stateManager.keyManager!.eventResult.reset();
     super.dispose();
   }
 
@@ -211,11 +205,11 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       return KeyEventResult.ignored;
     }
     // ESC 는 편집된 문자열을 원래 문자열로 돌이킨다.
-    else if (keyManager.isEsc) {
+    if (keyManager.isEsc) {
       _restoreText();
-    } else {
-      widget.stateManager.keyManager!.subject.add(keyManager);
     }
+
+    widget.stateManager.keyManager!.subject.add(keyManager);
 
     // 모든 이벤트를 처리 하고 이벤트 전파를 중단한다.
     return KeyEventResult.handled;

@@ -77,6 +77,10 @@ class PlutoGridKeyManager {
     _subscription = MergeStream([normalStream, movingStream]).listen(_handler);
   }
 
+  Map<ShortcutActivator, PlutoGridShortcutAction> getShortCuts() {
+    return stateManager.configuration.shortcut.actions;
+  }
+
   void _handler(PlutoKeyManagerEvent keyEvent) {
     if (keyEvent.isKeyUpEvent) return;
 
@@ -88,10 +92,10 @@ class PlutoGridKeyManager {
       return;
     }
 
-    _handleDefaultActions(keyEvent);
+    handleDefaultActions(keyEvent);
   }
 
-  void _handleDefaultActions(PlutoKeyManagerEvent keyEvent) {
+  void handleDefaultActions(PlutoKeyManagerEvent keyEvent) {
     if (!keyEvent.isModifierPressed && keyEvent.isCharacter) {
       _handleCharacter(keyEvent);
       return;
