@@ -160,11 +160,11 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
             print(event);
           },
           configuration: const PlutoGridConfiguration(
-              tabKeyAction: PlutoGridTabKeyAction.moveToNextOnEdge,
-              enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveRight,
+              enterKeyAction: PlutoGridEnterKeyAction.none,
               enableMoveHorizontalInEditing: true,
+              enableHover: false,
               style: PlutoGridStyleConfig(
-                  activatedColor: Color.fromARGB(255, 247, 193, 255),
+                  activatedColor: Color.fromARGB(255, 246, 191, 255),
                   activatedBorderColor: Colors.purple)),
         ),
       ),

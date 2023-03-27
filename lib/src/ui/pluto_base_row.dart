@@ -345,6 +345,7 @@ class _RowContainerWidgetState extends PlutoStateWithChange<_RowContainerWidget>
     return _AnimatedOrNormalContainer(
       enable: widget.enableRowColorAnimation,
       decoration: _decoration,
+      enableHover: stateManager.configuration.enableHover,
       hoverColor: stateManager.configuration.style.activatedColor,
       child: widget.child,
     );
@@ -353,7 +354,7 @@ class _RowContainerWidgetState extends PlutoStateWithChange<_RowContainerWidget>
 
 class _AnimatedOrNormalContainer extends StatefulWidget {
   final bool enable;
-
+  final bool enableHover;
   final Widget child;
 
   final BoxDecoration decoration;
@@ -362,6 +363,7 @@ class _AnimatedOrNormalContainer extends StatefulWidget {
   const _AnimatedOrNormalContainer({
     required this.enable,
     required this.child,
+    required this.enableHover,
     required this.decoration,
     required this.hoverColor,
     Key? key,
@@ -393,7 +395,7 @@ class _AnimatedOrNormalContainerState
     );
 
     final decoration = widget.decoration.copyWith(
-      color: _isHovered
+      color: _isHovered && widget.enableHover
           ? widget.hoverColor.withOpacity(0.4)
           : widget.decoration.color,
     );

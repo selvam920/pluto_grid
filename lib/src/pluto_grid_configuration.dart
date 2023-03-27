@@ -73,6 +73,8 @@ class PlutoGridConfiguration {
 
   final PlutoGridLocaleText localeText;
 
+  final bool enableHover;
+
   const PlutoGridConfiguration({
     this.enableMoveDownAfterSelecting = false,
     this.enableMoveHorizontalInEditing = false,
@@ -80,6 +82,7 @@ class PlutoGridConfiguration {
     this.tabKeyAction = PlutoGridTabKeyAction.normal,
     this.shortcut = const PlutoGridShortcut(),
     this.style = const PlutoGridStyleConfig(),
+    this.enableHover = true,
     this.scrollbar = const PlutoGridScrollbarConfig(),
     this.columnFilter = const PlutoGridColumnFilterConfig(),
     this.columnSize = const PlutoGridColumnSizeConfig(),
@@ -92,6 +95,7 @@ class PlutoGridConfiguration {
     this.enterKeyAction = PlutoGridEnterKeyAction.editingAndMoveDown,
     this.tabKeyAction = PlutoGridTabKeyAction.normal,
     this.shortcut = const PlutoGridShortcut(),
+    this.enableHover = true,
     this.style = const PlutoGridStyleConfig.dark(),
     this.scrollbar = const PlutoGridScrollbarConfig(),
     this.columnFilter = const PlutoGridColumnFilterConfig(),
