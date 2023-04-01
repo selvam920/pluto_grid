@@ -162,7 +162,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
           configuration: const PlutoGridConfiguration(
               enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveRight,
               enableMoveHorizontalInEditing: true,
-              enableHover: false,
+              enableHover: true,
               style: PlutoGridStyleConfig(
                   activatedColor: Color.fromARGB(255, 246, 191, 255),
                   activatedBorderColor: Colors.purple)),

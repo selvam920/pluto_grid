@@ -346,7 +346,7 @@ class _RowContainerWidgetState extends PlutoStateWithChange<_RowContainerWidget>
       enable: widget.enableRowColorAnimation,
       decoration: _decoration,
       enableHover: stateManager.configuration.enableHover,
-      hoverColor: stateManager.configuration.style.activatedColor,
+      hoverColor: Colors.grey[200] ?? Colors.grey,
       child: widget.child,
     );
   }
@@ -396,7 +396,7 @@ class _AnimatedOrNormalContainerState
 
     final decoration = widget.decoration.copyWith(
       color: _isHovered && widget.enableHover
-          ? widget.hoverColor.withOpacity(0.4)
+          ? widget.hoverColor
           : widget.decoration.color,
     );
 
