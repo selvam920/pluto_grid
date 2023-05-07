@@ -660,26 +660,27 @@ class PlutoGridStyleConfig {
 /// for desktop systems. Set [draggableScrollbar] to true to achieve this behavior. Also
 /// changing [isAlwaysShown] to true is recommended for more usability at desktops.
 class PlutoGridScrollbarConfig {
-  const PlutoGridScrollbarConfig({
-    this.draggableScrollbar = true,
-    this.isAlwaysShown = false,
-    this.onlyDraggingThumb = true,
-    this.enableScrollAfterDragEnd = true,
-    this.scrollbarThickness = PlutoScrollbar.defaultThickness,
-    this.scrollbarThicknessWhileDragging =
-        PlutoScrollbar.defaultThicknessWhileDragging,
-    this.hoverWidth = PlutoScrollbar.defaultScrollbarHoverWidth,
-    this.mainAxisMargin,
-    this.crossAxisMargin,
-    this.scrollBarColor,
-    this.scrollBarTrackColor,
-    this.scrollbarRadius = PlutoScrollbar.defaultRadius,
-    this.scrollbarRadiusWhileDragging =
-        PlutoScrollbar.defaultRadiusWhileDragging,
-    this.longPressDuration,
-    this.dragDevices,
-  });
+  const PlutoGridScrollbarConfig(
+      {this.draggableScrollbar = true,
+      this.isAlwaysShown = false,
+      this.onlyDraggingThumb = true,
+      this.enableScrollAfterDragEnd = true,
+      this.scrollbarThickness = PlutoScrollbar.defaultThickness,
+      this.scrollbarThicknessWhileDragging =
+          PlutoScrollbar.defaultThicknessWhileDragging,
+      this.hoverWidth = PlutoScrollbar.defaultScrollbarHoverWidth,
+      this.mainAxisMargin,
+      this.crossAxisMargin,
+      this.scrollBarColor,
+      this.scrollBarTrackColor,
+      this.scrollbarRadius = PlutoScrollbar.defaultRadius,
+      this.scrollbarRadiusWhileDragging =
+          PlutoScrollbar.defaultRadiusWhileDragging,
+      this.longPressDuration,
+      this.dragDevices,
+      this.isTouchScroll = true});
 
+  final bool isTouchScroll;
   final bool draggableScrollbar;
 
   final bool isAlwaysShown;

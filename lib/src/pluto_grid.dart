@@ -1217,7 +1217,7 @@ class _GridContainer extends StatelessWidget {
       focusNode: stateManager.gridFocusNode,
       child: ScrollConfiguration(
         behavior: PlutoScrollBehavior(
-          isMobile: false,
+          isTouch: stateManager.configuration.scrollbar.isTouchScroll,
           userDragDevices: stateManager.configuration.scrollbar.dragDevices,
         ),
         child: DecoratedBox(
@@ -1474,13 +1474,13 @@ class PlutoRowColorContext {
 /// Extension class for [ScrollConfiguration.behavior] of [PlutoGrid].
 class PlutoScrollBehavior extends MaterialScrollBehavior {
   const PlutoScrollBehavior({
-    required this.isMobile,
+    required this.isTouch,
     Set<PointerDeviceKind>? userDragDevices,
   })  : _dragDevices = userDragDevices ??
-            (isMobile ? _mobileDragDevices : _desktopDragDevices),
+            (isTouch ? _mobileDragDevices : _desktopDragDevices),
         super();
 
-  final bool isMobile;
+  final bool isTouch;
 
   @override
   Set<PointerDeviceKind> get dragDevices => _dragDevices;

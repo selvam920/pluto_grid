@@ -41,7 +41,7 @@ void main() {
       MaterialApp(
         home: ScrollConfiguration(
           behavior: PlutoScrollBehavior(
-            isMobile: isMobile,
+            isTouch: isMobile,
             userDragDevices: dragDevices,
           ),
           child: PlutoScrollbar(
