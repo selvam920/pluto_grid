@@ -470,6 +470,9 @@ class _DefaultCellWidget extends StatelessWidget {
       style: stateManager.configuration.style.cellTextStyle.copyWith(
         decoration: TextDecoration.none,
         fontWeight: FontWeight.normal,
+        // color: stateManager.currentRowIdx == rowIdx
+        //     ? stateManager.configuration.style.activatedTextColor
+        //     : null,
       ),
       overflow: TextOverflow.ellipsis,
       textAlign: column.textAlign.value,

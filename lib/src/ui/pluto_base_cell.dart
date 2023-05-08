@@ -396,11 +396,10 @@ class _CellState extends PlutoStateWithChange<_Cell> {
     }
 
     return PlutoDefaultCell(
-      cell: widget.cell,
-      column: widget.column,
-      rowIdx: widget.rowIdx,
-      row: widget.row,
-      stateManager: stateManager,
-    );
+        cell: widget.cell,
+        column: widget.column,
+        rowIdx: widget.rowIdx,
+        row: widget.row,
+        stateManager: stateManager);
   }
 }

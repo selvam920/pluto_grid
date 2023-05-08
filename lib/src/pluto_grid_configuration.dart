@@ -73,8 +73,6 @@ class PlutoGridConfiguration {
 
   final PlutoGridLocaleText localeText;
 
-  final bool enableHover;
-
   const PlutoGridConfiguration({
     this.enableMoveDownAfterSelecting = false,
     this.enableMoveHorizontalInEditing = false,
@@ -82,7 +80,6 @@ class PlutoGridConfiguration {
     this.tabKeyAction = PlutoGridTabKeyAction.normal,
     this.shortcut = const PlutoGridShortcut(),
     this.style = const PlutoGridStyleConfig(),
-    this.enableHover = true,
     this.scrollbar = const PlutoGridScrollbarConfig(),
     this.columnFilter = const PlutoGridColumnFilterConfig(),
     this.columnSize = const PlutoGridColumnSizeConfig(),
@@ -95,7 +92,6 @@ class PlutoGridConfiguration {
     this.enterKeyAction = PlutoGridEnterKeyAction.editingAndMoveDown,
     this.tabKeyAction = PlutoGridTabKeyAction.normal,
     this.shortcut = const PlutoGridShortcut(),
-    this.enableHover = true,
     this.style = const PlutoGridStyleConfig.dark(),
     this.scrollbar = const PlutoGridScrollbarConfig(),
     this.columnFilter = const PlutoGridColumnFilterConfig(),
@@ -207,6 +203,7 @@ class PlutoGridStyleConfig {
     this.oddRowColor,
     this.evenRowColor,
     this.activatedColor = const Color(0xFFDCF5FF),
+    this.activatedTextColor = Colors.black,
     this.checkedColor = const Color(0x11757575),
     this.cellColorInEditState = Colors.white,
     this.cellColorInReadOnlyState = const Color(0xFFDBDBDC),
@@ -263,6 +260,7 @@ class PlutoGridStyleConfig {
     this.oddRowColor,
     this.evenRowColor,
     this.activatedColor = const Color(0xFF313131),
+    this.activatedTextColor = Colors.white,
     this.checkedColor = const Color(0x11202020),
     this.cellColorInEditState = const Color(0xFF666666),
     this.cellColorInReadOnlyState = const Color(0xFF222222),
@@ -347,6 +345,8 @@ class PlutoGridStyleConfig {
 
   /// Activated Color. (Current or Selected row, cell)
   final Color activatedColor;
+
+  final Color activatedTextColor;
 
   /// Checked Color. (Checked rows)
   final Color checkedColor;
