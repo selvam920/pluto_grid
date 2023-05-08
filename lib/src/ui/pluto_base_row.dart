@@ -345,9 +345,10 @@ class _RowContainerWidgetState extends PlutoStateWithChange<_RowContainerWidget>
     return _AnimatedOrNormalContainer(
       enable: widget.enableRowColorAnimation,
       decoration: _decoration,
-      enableHover: stateManager.currentRowIdx != widget.rowIdx ||
-          !(stateManager.hasCheckedRow &&
-              stateManager.checkedRows
+      enableHover: (!stateManager.hasCheckedRow &&
+              stateManager.currentRowIdx != widget.rowIdx) ||
+          (stateManager.hasCheckedRow &&
+              !stateManager.checkedRows
                   .any((element) => element.key == widget.row.key)),
       hoverColor: Colors.grey[200] ?? Colors.grey,
       child: widget.child,
