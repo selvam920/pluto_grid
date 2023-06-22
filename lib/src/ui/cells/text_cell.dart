@@ -182,14 +182,20 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
         _moveHorizontal(keyManager) ||
         keyManager.isEsc ||
         keyManager.isTab ||
-        keyManager.isF3 ||
         keyManager.isEnter);
 
     // 이동 및 엔터키, 수정불가 셀의 좌우 이동을 제외한 문자열 입력 등의 키 입력은 텍스트 필드로 전파 한다.
     if (skip) {
-      return widget.stateManager.keyManager!.eventResult.skip(
-        KeyEventResult.ignored,
-      );
+      if (!keyManager.isCharacter &&
+          !keyManager.isBackspace &&
+          event.logicalKey != LogicalKeyboardKey.delete) {
+        _handleOnComplete();
+        return KeyEventResult.ignored;
+      } else {
+        return widget.stateManager.keyManager!.eventResult.skip(
+          KeyEventResult.ignored,
+        );
+      }
     }
 
     if (_debounce.isDebounced(
@@ -205,14 +211,18 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       return KeyEventResult.ignored;
     }
     // ESC 는 편집된 문자열을 원래 문자열로 돌이킨다.
-    if (keyManager.isEsc) {
+    else if (keyManager.isEsc) {
       _restoreText();
+      return KeyEventResult.ignored;
+    } else {
+      _handleOnComplete();
+      return KeyEventResult.ignored;
     }
 
-    widget.stateManager.keyManager!.subject.add(keyManager);
+    // widget.stateManager.keyManager!.subject.add(keyManager);
 
-    // 모든 이벤트를 처리 하고 이벤트 전파를 중단한다.
-    return KeyEventResult.handled;
+    // // 모든 이벤트를 처리 하고 이벤트 전파를 중단한다.
+    // return KeyEventResult.handled;
   }
 
   void _handleOnTap() {

@@ -78,6 +78,9 @@ class PlutoGridKeyManager {
       _handleCharacter(keyEvent);
       return true;
     } else {
+      if (stateManager.isEditing) {
+        stateManager.setEditing(false);
+      }
       return false;
     }
   }

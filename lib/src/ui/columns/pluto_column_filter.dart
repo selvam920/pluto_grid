@@ -162,7 +162,7 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
     final handleMoveHorizontal = keyManager.isTab ||
         (_controller.text.isEmpty && keyManager.isHorizontal);
 
-    final skip = !(handleMoveDown || handleMoveHorizontal || keyManager.isF3);
+    final skip = !(handleMoveDown || handleMoveHorizontal);
 
     if (skip) {
       if (keyManager.isUp) {
