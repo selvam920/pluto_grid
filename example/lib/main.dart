@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 void main() {
@@ -387,30 +388,49 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.all(15),
-        child: PlutoGrid(
-          columns: columns,
-          rows: rows,
-          columnGroups: columnGroups,
-          onLoaded: (PlutoGridOnLoadedEvent event) {
-            stateManager = event.stateManager;
-            stateManager.setShowColumnFilter(true);
+    return CallbackShortcuts(
+        bindings: <ShortcutActivator, VoidCallback>{
+          const SingleActivator(LogicalKeyboardKey.f1): () {
+            final snackBar = SnackBar(
+              content: const Text('Yay! A SnackBar!'),
+              action: SnackBarAction(
+                label: 'Undo',
+                onPressed: () {
+                  // Some code to undo the change.
+                },
+              ),
+            );
+
+            // Find the ScaffoldMessenger in the widget tree
+            // and use it to show a SnackBar.
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
           },
-          onChanged: (PlutoGridOnChangedEvent event) {
-            print(event);
-          },
-          configuration: const PlutoGridConfiguration(
-              enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveRight,
-              enableMoveHorizontalInEditing: true,
-              style: PlutoGridStyleConfig(
-                  activatedColor: Colors.purple,
-                  activatedTextColor: Colors.white,
-                  cellColorInReadOnlyState: Colors.white,
-                  activatedBorderColor: Colors.purple)),
-        ),
-      ),
-    );
+        },
+        child: Focus(
+            child: Scaffold(
+          body: Container(
+            padding: const EdgeInsets.all(15),
+            child: PlutoGrid(
+              columns: columns,
+              rows: rows,
+              columnGroups: columnGroups,
+              onLoaded: (PlutoGridOnLoadedEvent event) {
+                stateManager = event.stateManager;
+                stateManager.setShowColumnFilter(true);
+              },
+              onChanged: (PlutoGridOnChangedEvent event) {
+                print(event);
+              },
+              configuration: const PlutoGridConfiguration(
+                  enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveRight,
+                  enableMoveHorizontalInEditing: true,
+                  style: PlutoGridStyleConfig(
+                      activatedColor: Colors.purple,
+                      activatedTextColor: Colors.white,
+                      cellColorInReadOnlyState: Colors.white,
+                      activatedBorderColor: Colors.purple)),
+            ),
+          ),
+        )));
   }
 }

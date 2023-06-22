@@ -533,7 +533,7 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
       stateManager: _stateManager,
     );
 
-    _keyManager.init();
+    // _keyManager.init();
 
     _stateManager.setKeyManager(_keyManager);
 
@@ -594,13 +594,17 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
 
   KeyEventResult _handleGridFocusOnKey(FocusNode focusNode, RawKeyEvent event) {
     if (!_keyManager.eventResult.isSkip) {
-      _keyManager.subject.add(PlutoKeyManagerEvent(
+      var plutoKeyEvent = PlutoKeyManagerEvent(
         focusNode: focusNode,
         event: event,
-      ));
+      );
+      _keyManager.subject.add(plutoKeyEvent);
+      return _keyManager.eventResult.consume(!_keyManager.handler(plutoKeyEvent)
+          ? KeyEventResult.ignored
+          : KeyEventResult.handled);
+    } else {
+      return _keyManager.eventResult.consume(KeyEventResult.handled);
     }
-
-    return _keyManager.eventResult.consume(KeyEventResult.handled);
   }
 
   @override

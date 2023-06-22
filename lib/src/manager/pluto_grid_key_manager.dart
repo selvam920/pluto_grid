@@ -55,50 +55,30 @@ class PlutoGridKeyManager {
 
   PublishSubject<PlutoKeyManagerEvent> get subject => _subject;
 
-  late final StreamSubscription _subscription;
-
-  StreamSubscription get subscription => _subscription;
-
   void dispose() {
-    _subscription.cancel();
     _subject.close();
   }
 
-  void init() {
-    final normalStream = _subject.stream.where((event) => !event.needsThrottle);
-
-    final movingStream =
-        _subject.stream.where((event) => event.needsThrottle).transform(
-              ThrottleStreamTransformer(
-                (_) => TimerStream(_, const Duration(milliseconds: 1)),
-              ),
-            );
-
-    _subscription = MergeStream([normalStream, movingStream]).listen(_handler);
-  }
+  void init() {}
 
   Map<ShortcutActivator, PlutoGridShortcutAction> getShortCuts() {
     return stateManager.configuration.shortcut.actions;
   }
 
-  void _handler(PlutoKeyManagerEvent keyEvent) {
-    if (keyEvent.isKeyUpEvent) return;
+  bool handler(PlutoKeyManagerEvent keyEvent) {
+    if (keyEvent.isKeyUpEvent) return false;
 
     if (stateManager.configuration.shortcut.handle(
       keyEvent: keyEvent,
       stateManager: stateManager,
       state: RawKeyboard.instance,
     )) {
-      return;
-    }
-
-    handleDefaultActions(keyEvent);
-  }
-
-  void handleDefaultActions(PlutoKeyManagerEvent keyEvent) {
-    if (!keyEvent.isModifierPressed && keyEvent.isCharacter) {
+      return true;
+    } else if (!keyEvent.isModifierPressed && keyEvent.isCharacter) {
       _handleCharacter(keyEvent);
-      return;
+      return true;
+    } else {
+      return false;
     }
   }
 
