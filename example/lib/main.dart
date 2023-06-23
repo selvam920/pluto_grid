@@ -417,6 +417,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
               onLoaded: (PlutoGridOnLoadedEvent event) {
                 stateManager = event.stateManager;
                 stateManager.setShowColumnFilter(true);
+                stateManager.setShowColumnTitle(false);
               },
               onChanged: (PlutoGridOnChangedEvent event) {
                 print(event);

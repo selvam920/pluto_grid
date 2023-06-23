@@ -353,7 +353,7 @@ class PlutoGrid extends PlutoStatefulWidget {
 }
 
 class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
-  bool _showColumnTitle = false;
+  bool _showColumnTitle = true;
 
   bool _showColumnFilter = false;
 
@@ -644,10 +644,11 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
                   id: _StackName.bodyRows,
                   child: PlutoBodyRows(_stateManager),
                 ),
-                LayoutId(
-                  id: _StackName.bodyColumns,
-                  child: PlutoBodyColumns(_stateManager),
-                ),
+                if (_showColumnTitle)
+                  LayoutId(
+                    id: _StackName.bodyColumns,
+                    child: PlutoBodyColumns(_stateManager),
+                  ),
 
                 /// Body columns footer.
                 if (showColumnFooter)

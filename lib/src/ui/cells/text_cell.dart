@@ -162,10 +162,6 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
     _changeValue();
 
     _handleOnChanged(old);
-    // PlatformHelper.onMobile(() {
-    //   widget.stateManager.setKeepFocus(false);
-    //   FocusScope.of(context).requestFocus(FocusNode());
-    // });
   }
 
   KeyEventResult _handleOnKey(FocusNode node, RawKeyEvent event) {

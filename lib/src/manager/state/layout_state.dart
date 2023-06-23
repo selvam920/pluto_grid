@@ -170,7 +170,7 @@ mixin LayoutState implements IPlutoGridState {
 
   @override
   double get headerHeight {
-    if (createHeader == null) {
+    if (createHeader == null || !showColumnTitle) {
       return 0;
     }
 
