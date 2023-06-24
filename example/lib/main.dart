@@ -409,29 +409,61 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
         child: Focus(
             child: Scaffold(
           body: Container(
-            padding: const EdgeInsets.all(15),
-            child: PlutoGrid(
-              columns: columns,
-              rows: rows,
-              columnGroups: columnGroups,
-              onLoaded: (PlutoGridOnLoadedEvent event) {
-                stateManager = event.stateManager;
-                stateManager.setShowColumnFilter(true);
-                stateManager.setShowColumnTitle(false);
-              },
-              onChanged: (PlutoGridOnChangedEvent event) {
-                print(event);
-              },
-              configuration: const PlutoGridConfiguration(
-                  enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveRight,
-                  enableMoveHorizontalInEditing: true,
-                  style: PlutoGridStyleConfig(
-                      activatedColor: Colors.purple,
-                      activatedTextColor: Colors.white,
-                      cellColorInReadOnlyState: Colors.white,
-                      activatedBorderColor: Colors.purple)),
-            ),
-          ),
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                          width: 200,
+                          child: TextField(
+                            autofocus: true,
+                          )),
+                      TextButton(
+                          onPressed: () {
+                            var cells = stateManager.rows.first.cells.entries;
+                            var cell = cells
+                                .where((e) => e.value.initialized)
+                                .firstOrNull
+                                ?.value;
+                            if (cell != null) {
+                              stateManager.setKeepFocus(true);
+                              stateManager.setCurrentCell(
+                                cell,
+                                0,
+                              );
+                              stateManager.setEditing(true);
+                            }
+                          },
+                          child: Text('focus'))
+                    ],
+                  ),
+                  Expanded(
+                    child: PlutoGrid(
+                      columns: columns,
+                      rows: rows,
+                      columnGroups: columnGroups,
+                      onLoaded: (PlutoGridOnLoadedEvent event) {
+                        stateManager = event.stateManager;
+                        stateManager.setShowColumnFilter(true);
+                        stateManager.setShowColumnTitle(false);
+                      },
+                      onChanged: (PlutoGridOnChangedEvent event) {
+                        print(event);
+                      },
+                      configuration: const PlutoGridConfiguration(
+                          enterKeyAction:
+                              PlutoGridEnterKeyAction.editingAndMoveRight,
+                          enableMoveHorizontalInEditing: true,
+                          style: PlutoGridStyleConfig(
+                              activatedColor: Colors.purple,
+                              activatedTextColor: Colors.white,
+                              cellColorInReadOnlyState: Colors.white,
+                              activatedBorderColor: Colors.purple)),
+                    ),
+                  ),
+                ],
+              )),
         )));
   }
 }

@@ -183,12 +183,10 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     // 이동 및 엔터키, 수정불가 셀의 좌우 이동을 제외한 문자열 입력 등의 키 입력은 텍스트 필드로 전파 한다.
     if (skip) {
-      if (!keyManager.isAltPressed &&
-          !keyManager.isCtrlPressed &&
-          !keyManager.isShiftPressed &&
+      if (!keyManager.isModifierPressed &&
           !keyManager.isCharacter &&
           !keyManager.isBackspace &&
-          event.logicalKey != LogicalKeyboardKey.delete) {
+          !keyManager.isDelete) {
         _handleOnComplete();
         return KeyEventResult.ignored;
       } else {
@@ -215,7 +213,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       _restoreText();
       return KeyEventResult.ignored;
     } else {
-      _handleOnComplete();
+      // _handleOnComplete();
       return KeyEventResult.ignored;
     }
 
