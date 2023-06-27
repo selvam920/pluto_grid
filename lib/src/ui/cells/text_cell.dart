@@ -52,6 +52,10 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
     super.initState();
 
     cellFocus = FocusNode(onKey: _handleOnKey);
+    cellFocus.addListener(() {
+      if (!cellFocus.hasFocus) _handleOnComplete();
+    });
+
     widget.stateManager.setTextEditingController(_textController);
 
     _textController.text = formattedValue;
@@ -174,26 +178,25 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       return KeyEventResult.handled;
     }
 
-    print(event);
     final skip = !(keyManager.isVertical ||
         _moveHorizontal(keyManager) ||
         keyManager.isEsc ||
         keyManager.isTab ||
         keyManager.isEnter);
 
-    // 이동 및 엔터키, 수정불가 셀의 좌우 이동을 제외한 문자열 입력 등의 키 입력은 텍스트 필드로 전파 한다.
+    // handled means will ignore parent onkey, ignored means will run parent onkey event
     if (skip) {
-      if (!keyManager.isModifierPressed &&
-          !keyManager.isCharacter &&
-          !keyManager.isBackspace &&
-          !keyManager.isDelete) {
-        _handleOnComplete();
-        return KeyEventResult.ignored;
-      } else {
-        return widget.stateManager.keyManager!.eventResult.skip(
-          KeyEventResult.ignored,
-        );
-      }
+      // if (!keyManager.isModifierPressed &&
+      //     !keyManager.isCharacter &&
+      //     !keyManager.isBackspace &&
+      //     !keyManager.isDelete) {
+      //   _handleOnComplete();
+      //   return KeyEventResult.ignored;
+      // } else {
+      return widget.stateManager.keyManager!.eventResult.skip(
+        KeyEventResult.ignored,
+      );
+      // }
     }
 
     if (_debounce.isDebounced(
@@ -211,16 +214,15 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
     // ESC 는 편집된 문자열을 원래 문자열로 돌이킨다.
     else if (keyManager.isEsc) {
       _restoreText();
-      return KeyEventResult.ignored;
-    } else {
-      // _handleOnComplete();
-      return KeyEventResult.ignored;
     }
 
-    // widget.stateManager.keyManager!.subject.add(keyManager);
+    widget.stateManager.keyManager!.subject.add(keyManager);
+
+    if (keyManager.isVertical || _moveHorizontal(keyManager))
+      return KeyEventResult.ignored;
 
     // // 모든 이벤트를 처리 하고 이벤트 전파를 중단한다.
-    // return KeyEventResult.handled;
+    return KeyEventResult.handled;
   }
 
   void _handleOnTap() {

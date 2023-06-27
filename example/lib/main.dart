@@ -40,357 +40,47 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
         enableEditingMode: true,
         enableAutoEditing: true),
     PlutoColumn(
-      title: 'Name',
-      field: 'name',
-      type: PlutoColumnType.text(),
-    ),
-    PlutoColumn(
-      title: 'Age',
-      field: 'age',
-      type: PlutoColumnType.number(),
-    ),
-    PlutoColumn(
-      title: 'Role',
-      field: 'role',
-      type: PlutoColumnType.select(<String>[
-        'Programmer',
-        'Designer',
-        'Owner',
-      ]),
-    ),
-    PlutoColumn(
-      title: 'Joined',
-      field: 'joined',
-      type: PlutoColumnType.date(),
-    ),
-    PlutoColumn(
-      title: 'Working time',
-      field: 'working_time',
-      type: PlutoColumnType.time(),
-    ),
-    PlutoColumn(
-      title: 'salary',
-      field: 'salary',
-      type: PlutoColumnType.currency(),
-      footerRenderer: (rendererContext) {
-        return PlutoAggregateColumnFooter(
-          rendererContext: rendererContext,
-          formatAsCurrency: true,
-          type: PlutoAggregateColumnType.sum,
-          format: '#,###',
-          alignment: Alignment.center,
-          titleSpanBuilder: (text) {
-            return [
-              const TextSpan(
-                text: 'Sum',
-                style: TextStyle(color: Colors.red),
-              ),
-              const TextSpan(text: ' : '),
-              TextSpan(text: text),
-            ];
-          },
-        );
-      },
-    ),
+        title: 'Name',
+        field: 'name',
+        type: PlutoColumnType.text(),
+        enableEditingMode: false,
+        enableAutoEditing: false),
   ];
 
   final List<PlutoRow> rows = [
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: ''),
-        'name': PlutoCell(value: 'Mike'),
-        'age': PlutoCell(value: 20),
-        'role': PlutoCell(value: 'Programmer'),
-        'joined': PlutoCell(value: '2021-01-01'),
-        'working_time': PlutoCell(value: '09:00'),
-        'salary': PlutoCell(value: 300),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user2'),
-        'name': PlutoCell(value: 'Jack'),
-        'age': PlutoCell(value: 25),
-        'role': PlutoCell(value: 'Designer'),
-        'joined': PlutoCell(value: '2021-02-01'),
-        'working_time': PlutoCell(value: '10:00'),
-        'salary': PlutoCell(value: 400),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user1'),
-        'name': PlutoCell(value: 'Mike'),
-        'age': PlutoCell(value: 20),
-        'role': PlutoCell(value: 'Programmer'),
-        'joined': PlutoCell(value: '2021-01-01'),
-        'working_time': PlutoCell(value: '09:00'),
-        'salary': PlutoCell(value: 300),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user1'),
-        'name': PlutoCell(value: 'Mike'),
-        'age': PlutoCell(value: 20),
-        'role': PlutoCell(value: 'Programmer'),
-        'joined': PlutoCell(value: '2021-01-01'),
-        'working_time': PlutoCell(value: '09:00'),
-        'salary': PlutoCell(value: 300),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user2'),
-        'name': PlutoCell(value: 'Jack'),
-        'age': PlutoCell(value: 25),
-        'role': PlutoCell(value: 'Designer'),
-        'joined': PlutoCell(value: '2021-02-01'),
-        'working_time': PlutoCell(value: '10:00'),
-        'salary': PlutoCell(value: 400),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user1'),
-        'name': PlutoCell(value: 'Mike'),
-        'age': PlutoCell(value: 20),
-        'role': PlutoCell(value: 'Programmer'),
-        'joined': PlutoCell(value: '2021-01-01'),
-        'working_time': PlutoCell(value: '09:00'),
-        'salary': PlutoCell(value: 300),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user1'),
-        'name': PlutoCell(value: 'Mike'),
-        'age': PlutoCell(value: 20),
-        'role': PlutoCell(value: 'Programmer'),
-        'joined': PlutoCell(value: '2021-01-01'),
-        'working_time': PlutoCell(value: '09:00'),
-        'salary': PlutoCell(value: 300),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user2'),
-        'name': PlutoCell(value: 'Jack'),
-        'age': PlutoCell(value: 25),
-        'role': PlutoCell(value: 'Designer'),
-        'joined': PlutoCell(value: '2021-02-01'),
-        'working_time': PlutoCell(value: '10:00'),
-        'salary': PlutoCell(value: 400),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user1'),
-        'name': PlutoCell(value: 'Mike'),
-        'age': PlutoCell(value: 20),
-        'role': PlutoCell(value: 'Programmer'),
-        'joined': PlutoCell(value: '2021-01-01'),
-        'working_time': PlutoCell(value: '09:00'),
-        'salary': PlutoCell(value: 300),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user2'),
-        'name': PlutoCell(value: 'Jack'),
-        'age': PlutoCell(value: 25),
-        'role': PlutoCell(value: 'Designer'),
-        'joined': PlutoCell(value: '2021-02-01'),
-        'working_time': PlutoCell(value: '10:00'),
-        'salary': PlutoCell(value: 400),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user1'),
-        'name': PlutoCell(value: 'Mike'),
-        'age': PlutoCell(value: 20),
-        'role': PlutoCell(value: 'Programmer'),
-        'joined': PlutoCell(value: '2021-01-01'),
-        'working_time': PlutoCell(value: '09:00'),
-        'salary': PlutoCell(value: 300),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user2'),
-        'name': PlutoCell(value: 'Jack'),
-        'age': PlutoCell(value: 25),
-        'role': PlutoCell(value: 'Designer'),
-        'joined': PlutoCell(value: '2021-02-01'),
-        'working_time': PlutoCell(value: '10:00'),
-        'salary': PlutoCell(value: 400),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user1'),
-        'name': PlutoCell(value: 'Mike'),
-        'age': PlutoCell(value: 20),
-        'role': PlutoCell(value: 'Programmer'),
-        'joined': PlutoCell(value: '2021-01-01'),
-        'working_time': PlutoCell(value: '09:00'),
-        'salary': PlutoCell(value: 300),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user2'),
-        'name': PlutoCell(value: 'Jack'),
-        'age': PlutoCell(value: 25),
-        'role': PlutoCell(value: 'Designer'),
-        'joined': PlutoCell(value: '2021-02-01'),
-        'working_time': PlutoCell(value: '10:00'),
-        'salary': PlutoCell(value: 400),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user1'),
-        'name': PlutoCell(value: 'Mike'),
-        'age': PlutoCell(value: 20),
-        'role': PlutoCell(value: 'Programmer'),
-        'joined': PlutoCell(value: '2021-01-01'),
-        'working_time': PlutoCell(value: '09:00'),
-        'salary': PlutoCell(value: 300),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user2'),
-        'name': PlutoCell(value: 'Jack'),
-        'age': PlutoCell(value: 25),
-        'role': PlutoCell(value: 'Designer'),
-        'joined': PlutoCell(value: '2021-02-01'),
-        'working_time': PlutoCell(value: '10:00'),
-        'salary': PlutoCell(value: 400),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user1'),
-        'name': PlutoCell(value: 'Mike'),
-        'age': PlutoCell(value: 20),
-        'role': PlutoCell(value: 'Programmer'),
-        'joined': PlutoCell(value: '2021-01-01'),
-        'working_time': PlutoCell(value: '09:00'),
-        'salary': PlutoCell(value: 300),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user2'),
-        'name': PlutoCell(value: 'Jack'),
-        'age': PlutoCell(value: 25),
-        'role': PlutoCell(value: 'Designer'),
-        'joined': PlutoCell(value: '2021-02-01'),
-        'working_time': PlutoCell(value: '10:00'),
-        'salary': PlutoCell(value: 400),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user1'),
-        'name': PlutoCell(value: 'Mike'),
-        'age': PlutoCell(value: 20),
-        'role': PlutoCell(value: 'Programmer'),
-        'joined': PlutoCell(value: '2021-01-01'),
-        'working_time': PlutoCell(value: '09:00'),
-        'salary': PlutoCell(value: 300),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user2'),
-        'name': PlutoCell(value: 'Jack'),
-        'age': PlutoCell(value: 25),
-        'role': PlutoCell(value: 'Designer'),
-        'joined': PlutoCell(value: '2021-02-01'),
-        'working_time': PlutoCell(value: '10:00'),
-        'salary': PlutoCell(value: 400),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user1'),
-        'name': PlutoCell(value: 'Mike'),
-        'age': PlutoCell(value: 20),
-        'role': PlutoCell(value: 'Programmer'),
-        'joined': PlutoCell(value: '2021-01-01'),
-        'working_time': PlutoCell(value: '09:00'),
-        'salary': PlutoCell(value: 300),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user2'),
-        'name': PlutoCell(value: 'Jack'),
-        'age': PlutoCell(value: 25),
-        'role': PlutoCell(value: 'Designer'),
-        'joined': PlutoCell(value: '2021-02-01'),
-        'working_time': PlutoCell(value: '10:00'),
-        'salary': PlutoCell(value: 400),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user1'),
-        'name': PlutoCell(value: 'Mike'),
-        'age': PlutoCell(value: 20),
-        'role': PlutoCell(value: 'Programmer'),
-        'joined': PlutoCell(value: '2021-01-01'),
-        'working_time': PlutoCell(value: '09:00'),
-        'salary': PlutoCell(value: 300),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user2'),
-        'name': PlutoCell(value: 'Jack'),
-        'age': PlutoCell(value: 25),
-        'role': PlutoCell(value: 'Designer'),
-        'joined': PlutoCell(value: '2021-02-01'),
-        'working_time': PlutoCell(value: '10:00'),
-        'salary': PlutoCell(value: 400),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user3'),
-        'name': PlutoCell(value: 'Suzi'),
-        'age': PlutoCell(value: 40),
-        'role': PlutoCell(value: 'Owner'),
-        'joined': PlutoCell(value: '2021-03-01'),
-        'working_time': PlutoCell(value: '11:00'),
-        'salary': PlutoCell(value: 700),
-      },
-    ),
+    for (int i = 0; i <= 30; i++)
+      PlutoRow(
+        cells: {
+          'id': PlutoCell(value: ''),
+          'name': PlutoCell(value: ''),
+        },
+      ),
   ];
 
   /// columnGroups that can group columns can be omitted.
   final List<PlutoColumnGroup> columnGroups = [
     PlutoColumnGroup(title: 'Id', fields: ['id'], expandedColumn: true),
-    PlutoColumnGroup(title: 'User information', fields: ['name', 'age']),
-    PlutoColumnGroup(title: 'Status', children: [
-      PlutoColumnGroup(title: 'A', fields: ['role'], expandedColumn: true),
-      PlutoColumnGroup(title: 'Etc.', fields: ['joined', 'working_time']),
-    ]),
+    PlutoColumnGroup(title: 'name', fields: ['name'], expandedColumn: true),
   ];
 
   /// [PlutoGridStateManager] has many methods and properties to dynamically manipulate the grid.
   /// You can manipulate the grid dynamically at runtime by passing this through the [onLoaded] callback.
   late final PlutoGridStateManager stateManager;
+  final focusNode = FocusNode(
+    onKey: (node, event) {
+      if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
+        return KeyEventResult.handled;
+      }
+      return KeyEventResult.ignored;
+    },
+  );
 
   @override
   Widget build(BuildContext context) {
     return CallbackShortcuts(
         bindings: <ShortcutActivator, VoidCallback>{
           const SingleActivator(LogicalKeyboardKey.f1): () {
+            FocusScope.of(context).requestFocus(FocusNode());
             final snackBar = SnackBar(
               content: const Text('Yay! A SnackBar!'),
               action: SnackBarAction(
@@ -414,9 +104,10 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
                 children: [
                   Row(
                     children: [
-                      Container(
+                      SizedBox(
                           width: 200,
                           child: TextField(
+                            focusNode: focusNode,
                             autofocus: true,
                           )),
                       TextButton(
@@ -435,18 +126,19 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
                               stateManager.setEditing(true);
                             }
                           },
-                          child: Text('focus'))
+                          child: const Text('focus'))
                     ],
                   ),
                   Expanded(
                     child: PlutoGrid(
                       columns: columns,
                       rows: rows,
-                      columnGroups: columnGroups,
                       onLoaded: (PlutoGridOnLoadedEvent event) {
                         stateManager = event.stateManager;
-                        stateManager.setShowColumnFilter(true);
-                        stateManager.setShowColumnTitle(false);
+                        event.stateManager
+                            .setSelectingMode(PlutoGridSelectingMode.cell);
+                        // stateManager.setShowColumnFilter(true);
+                        // stateManager.setShowColumnTitle(false);
                       },
                       onChanged: (PlutoGridOnChangedEvent event) {
                         print(event);

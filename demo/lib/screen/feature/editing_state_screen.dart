@@ -27,7 +27,7 @@ class _EditingStateScreenState extends State<EditingStateScreen> {
   void initState() {
     super.initState();
 
-    final dummyData = DummyData(10, 100);
+    final dummyData = DummyData(1, 40);
 
     columns.addAll(dummyData.columns);
 

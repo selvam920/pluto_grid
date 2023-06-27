@@ -23,7 +23,7 @@ class DummyData {
         field: i.toString(),
         readOnly: [1, 3, 5].contains(i),
         type: (int i) {
-          if (i == 0) {
+          if (i == 1) {
             return PlutoColumnType.number();
           } else if (i == 1) {
             return PlutoColumnType.currency();
@@ -253,7 +253,7 @@ class DummyData {
 
     for (var column in columns) {
       cells[column.field] = PlutoCell(
-        value: valueByColumnType(column),
+        value: '',
       );
     }
 
