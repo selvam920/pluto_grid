@@ -36,6 +36,8 @@ class _PlutoDefaultCellState extends PlutoStateWithChange<PlutoDefaultCell> {
 
   bool _isCurrentCell = false;
 
+  bool _isCurrentRow = false;
+
   String _text = '';
 
   @override
@@ -105,6 +107,14 @@ class _PlutoDefaultCellState extends PlutoStateWithChange<PlutoDefaultCell> {
       stateManager.isCurrentCell(widget.cell),
     );
 
+    _isCurrentRow = update<bool>(
+      _isCurrentRow,
+      ((stateManager.hasFocus && stateManager.currentRowIdx == widget.rowIdx) ||
+          (stateManager.hasCheckedRow &&
+              stateManager.checkedRows
+                  .any((element) => element.sortIdx == widget.rowIdx))),
+    );
+
     _text = update<String>(
       _text,
       widget.column.formattedValueForDisplay(widget.cell.value),
@@ -125,6 +135,7 @@ class _PlutoDefaultCellState extends PlutoStateWithChange<PlutoDefaultCell> {
       row: widget.row,
       column: widget.column,
       cell: widget.cell,
+      isCurrentRow: _isCurrentRow,
     );
 
     final style = stateManager.configuration.style;
@@ -415,6 +426,7 @@ class _DefaultCellWidget extends StatelessWidget {
   final PlutoColumn column;
 
   final PlutoCell cell;
+  final bool isCurrentRow;
 
   const _DefaultCellWidget({
     required this.stateManager,
@@ -422,6 +434,7 @@ class _DefaultCellWidget extends StatelessWidget {
     required this.row,
     required this.column,
     required this.cell,
+    this.isCurrentRow = false,
     Key? key,
   }) : super(key: key);
 
@@ -470,9 +483,9 @@ class _DefaultCellWidget extends StatelessWidget {
       style: stateManager.configuration.style.cellTextStyle.copyWith(
         decoration: TextDecoration.none,
         fontWeight: FontWeight.normal,
-        // color: stateManager.currentRowIdx == rowIdx
-        //     ? stateManager.configuration.style.activatedTextColor
-        //     : null,
+        color: isCurrentRow
+            ? stateManager.configuration.style.activatedTextColor
+            : null,
       ),
       overflow: TextOverflow.ellipsis,
       textAlign: column.textAlign.value,

@@ -4,13 +4,75 @@ import 'package:intl/intl.dart' as intl;
 abstract class PlutoColumnType {
   dynamic get defaultValue;
 
+  factory PlutoColumnType.custom({
+    dynamic defaultValue = '',
+  }) {
+    return PlutoColumnTypeCustom(
+      defaultValue: defaultValue,
+    );
+  }
+
+  factory PlutoColumnType.autoComplete({
+    dynamic defaultValue,
+    bool isOnlyDigits = false,
+    int? maxLength,
+    List<String> items = const [],
+    double listHeight = 36 * 5,
+    double itemHeight = 36,
+  }) {
+    return PlutoColumnTypeAutoComplete(
+      defaultValue: defaultValue,
+      isOnlyDigits: isOnlyDigits,
+      maxLength: maxLength,
+      items: items,
+      listHeight: listHeight,
+      itemHeight: itemHeight,
+    );
+  }
+
+  factory PlutoColumnType.dropdown({
+    dynamic defaultValue,
+    required List<dynamic> items,
+    String? toValue,
+    Function(dynamic value)? onChanged,
+    bool enableColumnFilter = false,
+    IconData? popupIcon,
+    Widget? focusedIcon,
+    Widget? defaulticon,
+  }) {
+    return PlutoColumnTypeDropDown(
+      defaultValue: defaultValue,
+      items: items,
+      toValue: toValue,
+      onChanged: onChanged,
+      enableColumnFilter: enableColumnFilter,
+      popupIcon: popupIcon,
+      focusedIcon: focusedIcon,
+      defaulticon: defaulticon,
+    );
+  }
+
   /// Set as a string column.
   factory PlutoColumnType.text({
     dynamic defaultValue = '',
+    bool isOnlyDigits = false,
+    int? maxLength,
+    int? validLength,
+    String? validRegExp,
+    bool Function(dynamic value)? customValidation,
   }) {
     return PlutoColumnTypeText(
-      defaultValue: defaultValue,
-    );
+        defaultValue: defaultValue,
+        isOnlyDigits: isOnlyDigits,
+        maxLength: maxLength,
+        validLength: validLength,
+        validRegExp: validRegExp,
+        customValidation: customValidation);
+  }
+
+  /// Set as a bool column.
+  factory PlutoColumnType.bool() {
+    return const PlutoColumnTypeBool();
   }
 
   /// Set to numeric column.
@@ -162,9 +224,14 @@ abstract class PlutoColumnType {
 }
 
 extension PlutoColumnTypeExtension on PlutoColumnType {
+  bool get isAutoComplete => this is PlutoColumnTypeAutoComplete;
+
+  bool get isDropdown => this is PlutoColumnTypeDropDown;
   bool get isText => this is PlutoColumnTypeText;
 
   bool get isNumber => this is PlutoColumnTypeNumber;
+
+  bool get isCustom => this is PlutoColumnTypeCustom;
 
   bool get isCurrency => this is PlutoColumnTypeCurrency;
 
@@ -173,6 +240,22 @@ extension PlutoColumnTypeExtension on PlutoColumnType {
   bool get isDate => this is PlutoColumnTypeDate;
 
   bool get isTime => this is PlutoColumnTypeTime;
+
+  PlutoColumnTypeAutoComplete get autoComplete {
+    if (this is! PlutoColumnTypeAutoComplete) {
+      throw TypeError();
+    }
+
+    return this as PlutoColumnTypeAutoComplete;
+  }
+
+  PlutoColumnTypeDropDown get dropdown {
+    if (this is! PlutoColumnTypeDropDown) {
+      throw TypeError();
+    }
+
+    return this as PlutoColumnTypeDropDown;
+  }
 
   PlutoColumnTypeText get text {
     if (this is! PlutoColumnTypeText) {
@@ -231,17 +314,134 @@ extension PlutoColumnTypeExtension on PlutoColumnType {
       hasFormat ? (this as PlutoColumnTypeHasFormat).applyFormat(value) : value;
 }
 
-class PlutoColumnTypeText implements PlutoColumnType {
+class PlutoColumnTypeCustom implements PlutoColumnType {
   @override
   final dynamic defaultValue;
 
-  const PlutoColumnTypeText({
+  const PlutoColumnTypeCustom({
     this.defaultValue,
   });
 
   @override
   bool isValid(dynamic value) {
     return value is String || value is num;
+  }
+
+  @override
+  int compare(dynamic a, dynamic b) {
+    return _compareWithNull(a, b, () => a.toString().compareTo(b.toString()));
+  }
+
+  @override
+  dynamic makeCompareValue(dynamic v) {
+    return v.toString();
+  }
+}
+
+class PlutoColumnTypeAutoComplete implements PlutoColumnType {
+  @override
+  final dynamic defaultValue;
+  final bool isOnlyDigits;
+  final int? maxLength;
+  List<String> items;
+  final double listHeight;
+  final double itemHeight;
+
+  PlutoColumnTypeAutoComplete({
+    this.defaultValue,
+    required this.items,
+    required this.isOnlyDigits,
+    this.maxLength,
+    this.listHeight = 36 * 5,
+    this.itemHeight = 36,
+  });
+
+  @override
+  bool isValid(dynamic value) => items.contains(value.toString());
+
+  @override
+  int compare(dynamic a, dynamic b) {
+    return _compareWithNull(a, b, () => a.toString().compareTo(b.toString()));
+  }
+
+  @override
+  dynamic makeCompareValue(dynamic v) {
+    return v.toString();
+  }
+}
+
+class PlutoColumnTypeDropDown
+    implements PlutoColumnType, PlutoColumnTypeHasPopupIcon {
+  @override
+  final dynamic defaultValue;
+  final List<dynamic> items;
+  final String? toValue;
+  final void Function(dynamic value)? onChanged;
+  final bool enableColumnFilter;
+
+  @override
+  final IconData? popupIcon;
+
+  final Widget? focusedIcon;
+  final Widget? defaulticon;
+
+  PlutoColumnTypeDropDown({
+    this.defaultValue,
+    required this.items,
+    this.toValue,
+    this.onChanged,
+    required this.enableColumnFilter,
+    this.popupIcon,
+    this.focusedIcon,
+    this.defaulticon,
+  });
+
+  @override
+  bool isValid(dynamic value) => items.contains(value) == true;
+
+  @override
+  int compare(dynamic a, dynamic b) {
+    return _compareWithNull(a, b, () => a.toString().compareTo(b.toString()));
+  }
+
+  @override
+  dynamic makeCompareValue(dynamic v) {
+    return v.toString();
+  }
+}
+
+class PlutoColumnTypeText implements PlutoColumnType {
+  final bool isOnlyDigits;
+  final int? maxLength;
+  final int? validLength;
+  final String? validRegExp;
+  final bool Function(dynamic value)? customValidation;
+
+  @override
+  final dynamic defaultValue;
+
+  const PlutoColumnTypeText({
+    this.defaultValue,
+    this.isOnlyDigits = false,
+    this.maxLength,
+    this.validLength,
+    this.validRegExp,
+    this.customValidation,
+  });
+
+  @override
+  bool isValid(dynamic value) {
+    if (validLength != null) {
+      return (value is String || value is num) &&
+          (value.toString().length == validLength);
+    } else if (validRegExp != null) {
+      return (value is String || value is num) &&
+          (RegExp(validRegExp!).hasMatch(value.toString()));
+    } else if (customValidation != null) {
+      return customValidation!(value);
+    } else {
+      return (value is String || value is num) && value.toString().isNotEmpty;
+    }
   }
 
   @override
@@ -349,6 +549,30 @@ class PlutoColumnTypeCurrency
 
   @override
   late final int decimalPoint;
+}
+
+class PlutoColumnTypeBool implements PlutoColumnType {
+  @override
+  final dynamic defaultValue;
+
+  const PlutoColumnTypeBool({
+    this.defaultValue,
+  });
+
+  @override
+  bool isValid(dynamic value) {
+    return value is bool? || value is bool;
+  }
+
+  @override
+  int compare(dynamic a, dynamic b) {
+    return _compareWithNull(a, b, () => a.toString().compareTo(b.toString()));
+  }
+
+  @override
+  dynamic makeCompareValue(dynamic v) {
+    return v.toString();
+  }
 }
 
 class PlutoColumnTypeSelect

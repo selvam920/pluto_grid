@@ -7,11 +7,13 @@ class PlutoRow {
     PlutoRowType? type,
     this.sortIdx = 0,
     bool checked = false,
+    bool isNew = false,
     Key? key,
   })  : type = type ?? PlutoRowTypeNormal.instance,
         _checked = checked,
         _state = PlutoRowState.none,
-        _key = key ?? UniqueKey();
+        _key = key ?? UniqueKey(),
+        _isNew = isNew;
 
   final PlutoRowType type;
 
@@ -24,6 +26,12 @@ class PlutoRow {
   int sortIdx;
 
   bool? _checked;
+
+  bool? _isNew;
+
+  bool get isNew => _isNew ??= false;
+
+  set isNew(bool value) => _isNew = value;
 
   PlutoRow? _parent;
 

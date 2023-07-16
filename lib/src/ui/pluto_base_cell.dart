@@ -264,7 +264,7 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
         ),
         border: Border.all(
           color: hasFocus ? activatedBorderColor : inactivatedBorderColor,
-          width: 1,
+          width: hasFocus ? 1.5 : 1,
         ),
       );
     } else if (isSelectedCell) {
@@ -387,6 +387,33 @@ class _CellState extends PlutoStateWithChange<_Cell> {
         );
       } else if (widget.column.type.isCurrency) {
         return PlutoCurrencyCell(
+          stateManager: stateManager,
+          cell: widget.cell,
+          column: widget.column,
+          row: widget.row,
+        );
+      } else if (widget.column.type.isCustom) {
+        return widget.column.customCell?.call(
+              stateManager,
+              widget.cell,
+              widget.column,
+              widget.row,
+            ) ??
+            PlutoTextCell(
+              stateManager: stateManager,
+              cell: widget.cell,
+              column: widget.column,
+              row: widget.row,
+            );
+      } else if (widget.column.type.isDropdown) {
+        return PlutoDropDownCell(
+          stateManager: stateManager,
+          cell: widget.cell,
+          column: widget.column,
+          row: widget.row,
+        );
+      } else if (widget.column.type.isAutoComplete) {
+        return PlutoAutoCompleteTextCell(
           stateManager: stateManager,
           cell: widget.cell,
           column: widget.column,

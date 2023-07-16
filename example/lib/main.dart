@@ -34,6 +34,40 @@ class PlutoGridExamplePage extends StatefulWidget {
 class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
   final List<PlutoColumn> columns = <PlutoColumn>[
     PlutoColumn(
+      title: 'header',
+      field: 'header',
+      type: PlutoColumnType.custom(),
+      enableEditingMode: true,
+      enableAutoEditing: true,
+      customCell: (stateManager, cell, column, row) {
+        return const TextField(
+          autofocus: true,
+        );
+      },
+    ),
+    PlutoColumn(
+      enableEditingMode: true,
+      enableAutoEditing: true,
+      title: 'autocomplete',
+      field: 'autocomplete',
+      type: PlutoColumnType.autoComplete(items: ["jacks", "jsoncon", "sks"]),
+    ),
+    PlutoColumn(
+      enableEditingMode: true,
+      enableAutoEditing: true,
+      title: 'dropdown',
+      field: 'dropdown',
+      type: PlutoColumnType.dropdown(
+          items: ["jacks", "jsoncon", "sks"],
+          defaulticon: Icon(Icons.arrow_downward),
+          focusedIcon: Icon(Icons.arrow_back)),
+    ),
+    PlutoColumn(
+      title: 'Buy',
+      field: 'buy',
+      type: PlutoColumnType.bool(),
+    ),
+    PlutoColumn(
         title: 'Id',
         field: 'id',
         type: PlutoColumnType.text(),
@@ -52,7 +86,11 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
       PlutoRow(
         cells: {
           'id': PlutoCell(value: ''),
+          'autocomplete': PlutoCell(value: ''),
+          'dropdown': PlutoCell(value: ''),
+          'header': PlutoCell(value: ''),
           'name': PlutoCell(value: ''),
+          'buy': PlutoCell(value: false),
         },
       ),
   ];

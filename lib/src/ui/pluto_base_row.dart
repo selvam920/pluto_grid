@@ -94,7 +94,9 @@ class PlutoBaseRow extends StatelessWidget {
               ),
               scrollController: stateManager.scroll.bodyRowsHorizontal!,
               initialViewportDimension: MediaQuery.of(dragContext).size.width,
-              children: columns.map(_makeCell).toList(growable: false),
+              children: columns
+                  .map((column) => _makeCell(column))
+                  .toList(growable: false),
             )
           : CustomMultiChildLayout(
               key: ValueKey('rowContainer_${row.key}_row'),
@@ -103,7 +105,9 @@ class PlutoBaseRow extends StatelessWidget {
                 columns: columns,
                 textDirection: stateManager.textDirection,
               ),
-              children: columns.map(_makeCell).toList(growable: false),
+              children: columns
+                  .map((column) => _makeCell(column))
+                  .toList(growable: false),
             ),
     );
   }
@@ -350,7 +354,8 @@ class _RowContainerWidgetState extends PlutoStateWithChange<_RowContainerWidget>
           (stateManager.hasCheckedRow &&
               !stateManager.checkedRows
                   .any((element) => element.key == widget.row.key)),
-      hoverColor: Colors.grey[200] ?? Colors.grey,
+      hoverColor:
+          stateManager.configuration.style.activatedColor.withOpacity(0.6),
       child: widget.child,
     );
   }
