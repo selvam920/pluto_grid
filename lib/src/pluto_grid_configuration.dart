@@ -202,6 +202,8 @@ class PlutoGridStyleConfig {
     this.rowColor = Colors.white,
     this.oddRowColor,
     this.evenRowColor,
+    this.enableHover = true,
+    this.hoverColor,
     this.activatedColor = const Color(0xFFDCF5FF),
     this.activatedTextColor = Colors.black,
     this.checkedColor = const Color(0x11757575),
@@ -259,6 +261,8 @@ class PlutoGridStyleConfig {
     this.rowColor = const Color(0xFF111111),
     this.oddRowColor,
     this.evenRowColor,
+    this.enableHover = true,
+    this.hoverColor,
     this.activatedColor = const Color(0xFF313131),
     this.activatedTextColor = Colors.white,
     this.checkedColor = const Color(0x11202020),
@@ -347,6 +351,9 @@ class PlutoGridStyleConfig {
   final Color activatedColor;
 
   final Color activatedTextColor;
+
+  final bool enableHover;
+  final Color? hoverColor;
 
   /// Checked Color. (Checked rows)
   final Color checkedColor;
