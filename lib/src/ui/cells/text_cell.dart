@@ -413,21 +413,21 @@ mixin AutoCompleteTextCellState<T extends AutoCompleteTextCell> on State<T>
       return true;
     }
 
-    final selection = textController.selection;
+    //final selection = textController.selection;
 
-    if (selection.baseOffset != selection.extentOffset) {
-      return false;
-    }
+    // if (selection.baseOffset != selection.extentOffset) {
+    //   return false;
+    // }
 
-    if (selection.baseOffset == 0 && keyManager.isLeft) {
-      return true;
-    }
+    // if (selection.baseOffset == 0 && keyManager.isLeft) {
+    //   return true;
+    // }
 
-    final textLength = textController.text.length;
+    // final textLength = textController.text.length;
 
-    if (selection.baseOffset == textLength && keyManager.isRight) {
-      return true;
-    }
+    // if (selection.baseOffset == textLength && keyManager.isRight) {
+    //   return true;
+    // }
 
     return false;
   }

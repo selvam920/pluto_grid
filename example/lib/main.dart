@@ -59,8 +59,8 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
       field: 'dropdown',
       type: PlutoColumnType.dropdown(
           items: ["jacks", "jsoncon", "sks"],
-          defaulticon: Icon(Icons.arrow_downward),
-          focusedIcon: Icon(Icons.arrow_back)),
+          defaulticon: const Icon(Icons.arrow_downward),
+          focusedIcon: const Icon(Icons.arrow_back)),
     ),
     PlutoColumn(
       title: 'Buy',
