@@ -429,6 +429,10 @@ mixin AutoCompleteTextCellState<T extends AutoCompleteTextCell> on State<T>
     //   return true;
     // }
 
+    if (keyManager.isLeft || keyManager.isRight) {
+      return true;
+    }
+
     return false;
   }
 
