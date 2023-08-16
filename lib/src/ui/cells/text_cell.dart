@@ -119,22 +119,25 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       return true;
     }
 
-    final selection = _textController.selection;
+    // final selection = _textController.selection;
 
-    if (selection.baseOffset != selection.extentOffset) {
-      return false;
-    }
+    // if (selection.baseOffset != selection.extentOffset) {
+    //   return false;
+    // }
 
-    if (selection.baseOffset == 0 && keyManager.isLeft) {
+    // if (selection.baseOffset == 0 && keyManager.isLeft) {
+    //   return true;
+    // }
+
+    // final textLength = _textController.text.length;
+
+    // if (selection.baseOffset == textLength && keyManager.isRight) {
+    //   return true;
+    // }
+
+    if (keyManager.isHorizontal) {
       return true;
     }
-
-    final textLength = _textController.text.length;
-
-    if (selection.baseOffset == textLength && keyManager.isRight) {
-      return true;
-    }
-
     return false;
   }
 
@@ -622,7 +625,7 @@ mixin AutoCompleteTextCellState<T extends AutoCompleteTextCell> on State<T>
         _moveHorizontal(keyManager) ||
         keyManager.isEsc ||
         keyManager.isTab ||
-        keyManager.isF3 ||
+        // keyManager.isF3 ||
         keyManager.isEnter);
 
     // 이동 및 엔터키, 수정불가 셀의 좌우 이동을 제외한 문자열 입력 등의 키 입력은 텍스트 필드로 전파 한다.
