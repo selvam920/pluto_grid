@@ -80,7 +80,8 @@ class PlutoKeyManagerEvent {
       event.logicalKey.keyId == LogicalKeyboardKey.controlRight.keyId;
 
   bool get isCharacter =>
-      _characters.contains(event.logicalKey.keyId) ||
+      (_characters.contains(event.logicalKey.keyId) &&
+          event.logicalKey.keyId != LogicalKeyboardKey.space.keyId) ||
       event.logicalKey.keyId == LogicalKeyboardKey.numpad0.keyId ||
       event.logicalKey.keyId == LogicalKeyboardKey.numpad1.keyId ||
       event.logicalKey.keyId == LogicalKeyboardKey.numpad2.keyId ||

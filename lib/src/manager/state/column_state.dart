@@ -304,12 +304,20 @@ mixin ColumnState implements IPlutoGridState {
 
   @override
   PlutoColumn? get currentColumn {
-    return currentCell == null ? null : currentCell!.column;
+    if (currentCell == null) {
+      return null;
+    } else {
+      return currentCell!.column;
+    }
   }
 
   @override
   String? get currentColumnField {
-    return currentCell == null ? null : currentCell!.column.field;
+    if (currentCell == null) {
+      return null;
+    } else {
+      return currentCell!.column.field;
+    }
   }
 
   @override
