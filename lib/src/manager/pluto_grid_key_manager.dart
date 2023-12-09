@@ -69,7 +69,7 @@ class PlutoGridKeyManager {
     if (stateManager.configuration.shortcut.handle(
       keyEvent: keyEvent,
       stateManager: stateManager,
-      state: RawKeyboard.instance,
+      state: HardwareKeyboard.instance,
     )) {
       return true;
     } else if (!keyEvent.isModifierPressed && keyEvent.isCharacter) {
@@ -92,6 +92,13 @@ class PlutoGridKeyManager {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (stateManager.textEditingController != null) {
           stateManager.textEditingController!.text = keyEvent.event.character!;
+          Future.delayed(const Duration(milliseconds: 20), () {
+            stateManager.textEditingController!.selection =
+                TextSelection.fromPosition(
+              TextPosition(
+                  offset: stateManager.textEditingController!.text.length),
+            );
+          });
         }
       });
     }

@@ -27,10 +27,10 @@ class PlutoGridShortcut {
   bool handle({
     required PlutoKeyManagerEvent keyEvent,
     required PlutoGridStateManager stateManager,
-    required RawKeyboard state,
+    required HardwareKeyboard state,
   }) {
     for (final action in actions.entries) {
-      if (accepts(action.key, keyEvent.event, RawKeyboard.instance)) {
+      if (accepts(action.key, keyEvent.event, HardwareKeyboard.instance)) {
         actions[action.key]!
             .execute(keyEvent: keyEvent, stateManager: stateManager);
         return true;
@@ -41,11 +41,11 @@ class PlutoGridShortcut {
   }
 
   static bool accepts(
-      ShortcutActivator key, RawKeyEvent event, RawKeyboard state) {
-    if (event is! RawKeyDownEvent) {
+      ShortcutActivator key, KeyEvent event, HardwareKeyboard state) {
+    if (event is! KeyDownEvent) {
       return false;
     }
-    var keypressed = (state.keysPressed);
+    var keypressed = (state.logicalKeysPressed);
     keypressed.removeWhere((element) => element == LogicalKeyboardKey.numLock);
 
     final bool keysEqual =

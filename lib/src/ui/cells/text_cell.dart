@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -55,7 +54,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   void initState() {
     super.initState();
 
-    cellFocus = FocusNode(onKey: _handleOnKey);
+    cellFocus = FocusNode(onKeyEvent: _handleOnKey);
     cellFocus.addListener(() {
       if (!cellFocus.hasFocus) _handleOnComplete();
     });
@@ -175,7 +174,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
     _handleOnChanged(old);
   }
 
-  KeyEventResult _handleOnKey(FocusNode node, RawKeyEvent event) {
+  KeyEventResult _handleOnKey(FocusNode node, KeyEvent event) {
     var keyManager = PlutoKeyManagerEvent(
       focusNode: node,
       event: event,
@@ -208,7 +207,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     if (_debounce.isDebounced(
       hashCode: _textController.text.hashCode,
-      ignore: !kIsWeb,
+      ignore: false,
     )) {
       return KeyEventResult.handled;
     }
@@ -225,8 +224,9 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     widget.stateManager.keyManager!.subject.add(keyManager);
 
-    if (keyManager.isVertical || _moveHorizontal(keyManager))
+    if (keyManager.isVertical || _moveHorizontal(keyManager)) {
       return KeyEventResult.ignored;
+    }
 
     // // 모든 이벤트를 처리 하고 이벤트 전파를 중단한다.
     return KeyEventResult.handled;
@@ -348,7 +348,7 @@ mixin AutoCompleteTextCellState<T extends AutoCompleteTextCell> on State<T>
   @override
   void initState() {
     super.initState();
-    cellFocus = FocusNode(onKey: _handleOnKey);
+    cellFocus = FocusNode(onKeyEvent: _handleOnKey);
     widget.stateManager.setTextEditingController(textController);
     textController.text = formattedValue;
     _initialCellValue = textController.text;
@@ -611,7 +611,7 @@ mixin AutoCompleteTextCellState<T extends AutoCompleteTextCell> on State<T>
     }
   }
 
-  KeyEventResult _handleOnKey(FocusNode node, RawKeyEvent event) {
+  KeyEventResult _handleOnKey(FocusNode node, KeyEvent event) {
     var keyManager = PlutoKeyManagerEvent(
       focusNode: node,
       event: event,
@@ -637,7 +637,7 @@ mixin AutoCompleteTextCellState<T extends AutoCompleteTextCell> on State<T>
 
     if (_debounce.isDebounced(
       hashCode: textController.text.hashCode,
-      ignore: !kIsWeb,
+      ignore: false,
     )) {
       return KeyEventResult.handled;
     }

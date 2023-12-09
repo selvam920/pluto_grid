@@ -141,7 +141,7 @@ class _PlutoDropDownCellState extends State<PlutoDropDownCell> {
   @override
   void initState() {
     super.initState();
-    focusNode.onKey = (node, event) => _handleKeyboardEvent(node, event);
+    focusNode.onKeyEvent = (node, event) => _handleKeyboardEvent(node, event);
     focusNode.requestFocus();
   }
 
@@ -151,7 +151,7 @@ class _PlutoDropDownCellState extends State<PlutoDropDownCell> {
     super.dispose();
   }
 
-  KeyEventResult _handleKeyboardEvent(FocusNode node, RawKeyEvent event) {
+  KeyEventResult _handleKeyboardEvent(FocusNode node, KeyEvent event) {
     var keyManager = PlutoKeyManagerEvent(focusNode: node, event: event);
 
     if (keyManager.isKeyDownEvent) {
@@ -313,8 +313,8 @@ class _PlutoDropDownCellListState extends State<PlutoDropDownCellList> {
   @override
   void initState() {
     super.initState();
-    focusNodes = List.generate(
-        widget.items.length, (index) => FocusNode(onKey: _handleKeyboardEvent));
+    focusNodes = List.generate(widget.items.length,
+        (index) => FocusNode(onKeyEvent: _handleKeyboardEvent));
     int initialSelectedValueIndex =
         widget.items.indexWhere((element) => element == widget.initialValue);
     if (initialSelectedValueIndex != -1) {
@@ -331,7 +331,7 @@ class _PlutoDropDownCellListState extends State<PlutoDropDownCellList> {
     super.dispose();
   }
 
-  KeyEventResult _handleKeyboardEvent(FocusNode node, RawKeyEvent event) {
+  KeyEventResult _handleKeyboardEvent(FocusNode node, KeyEvent event) {
     var keyManager = PlutoKeyManagerEvent(
       focusNode: node,
       event: event,

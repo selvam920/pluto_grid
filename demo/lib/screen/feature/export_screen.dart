@@ -285,7 +285,7 @@ class _HeaderState extends State<_Header> {
                   onPressed: _printToPdfAndShareOrSave,
                   child: const Text("Print to PDF and Share")),
 
-              // TODO This works only under Windows, disabled for now
+              // This works only under Windows, disabled for now
               // ElevatedButton(
               //     onPressed: _printToPdfWithDialog,
               //     child: const Text("Print PDF with dialog (Windows only)")),

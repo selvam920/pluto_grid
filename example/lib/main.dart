@@ -187,7 +187,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
                           enableMoveHorizontalInEditing: true,
                           style: PlutoGridStyleConfig(
                               enableHover: true,
-                              activatedColor: Colors.purple,
+                              // activatedColor: Colors.purple,
                               activatedTextColor: Colors.white,
                               cellColorInReadOnlyState: Colors.white,
                               activatedBorderColor: Colors.purple)),
