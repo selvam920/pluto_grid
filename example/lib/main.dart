@@ -72,12 +72,12 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
         field: 'id',
         type: PlutoColumnType.text(),
         enableEditingMode: true,
-        enableAutoEditing: true),
+        enableAutoEditing: false),
     PlutoColumn(
         title: 'Name',
         field: 'name',
         type: PlutoColumnType.text(),
-        enableEditingMode: false,
+        enableEditingMode: true,
         enableAutoEditing: false),
   ];
 

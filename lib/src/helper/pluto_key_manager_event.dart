@@ -12,7 +12,7 @@ class PlutoKeyManagerEvent {
 
   bool get needsThrottle => isMoving || isTab || isPageUp || isPageDown;
 
-  bool get isKeyDownEvent => event is KeyDownEvent;
+  bool get isKeyDownEvent => event is KeyDownEvent || event is KeyRepeatEvent;
 
   bool get isKeyUpEvent => event is KeyUpEvent;
 

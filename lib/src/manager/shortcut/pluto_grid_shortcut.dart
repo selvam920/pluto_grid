@@ -42,10 +42,10 @@ class PlutoGridShortcut {
 
   static bool accepts(
       ShortcutActivator key, KeyEvent event, HardwareKeyboard state) {
-    if (event is! KeyDownEvent) {
+    if (event is KeyUpEvent) {
       return false;
     }
-    var keypressed = (state.logicalKeysPressed);
+    var keypressed = state.logicalKeysPressed;
     keypressed.removeWhere((element) => element == LogicalKeyboardKey.numLock);
 
     final bool keysEqual =
