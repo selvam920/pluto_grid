@@ -70,7 +70,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
     PlutoColumn(
         title: 'Id',
         field: 'id',
-        type: PlutoColumnType.text(),
+        type: PlutoColumnType.number(),
         enableEditingMode: true,
         enableAutoEditing: false),
     PlutoColumn(

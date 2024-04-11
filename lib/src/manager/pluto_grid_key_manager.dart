@@ -83,8 +83,23 @@ class PlutoGridKeyManager {
     }
   }
 
+  bool _isNumeric(String? str) {
+    if (str == null) {
+      return false;
+    }
+    return double.tryParse(str) != null;
+  }
+
   void _handleCharacter(PlutoKeyManagerEvent keyEvent) {
     if (stateManager.isEditing != true && stateManager.currentCell != null) {
+      if (stateManager.currentCell!.column.type is PlutoColumnTypeNumber) {
+        if (keyEvent.event.character != null) {
+          if (!_isNumeric(keyEvent.event.character)) {
+            return;
+          }
+        }
+      }
+
       stateManager.setEditing(true);
       if (keyEvent.event.character == null) {
         return;
