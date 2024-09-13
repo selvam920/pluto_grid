@@ -53,6 +53,7 @@ class PlutoKeyManagerEvent {
 
   bool get isEnter =>
       event.logicalKey.keyId == LogicalKeyboardKey.enter.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.select.keyId ||
       event.logicalKey.keyId == LogicalKeyboardKey.numpadEnter.keyId;
 
   bool get isTab => event.logicalKey.keyId == LogicalKeyboardKey.tab.keyId;
