@@ -58,7 +58,7 @@ class _DevelopmentScreenState extends State<DevelopmentScreen> {
       enableCellBorderHorizontal: true,
       // oddRowColor: Colors.amber,
       // evenRowColor: const Color(0xFFF6F6F6),
-      cellColorGroupedRow: const Color(0x80F6F6F6),
+      //cellColorGroupedRow: const Color(0x80F6F6F6),
       gridBorderRadius: BorderRadius.circular(10),
       gridPopupBorderRadius: BorderRadius.circular(7),
       // columnAscendingIcon: const Icon(

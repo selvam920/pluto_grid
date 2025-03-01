@@ -6,9 +6,7 @@ import 'package:rxdart/rxdart.dart';
 class PlutoGridEventManager {
   final PlutoGridStateManager stateManager;
 
-  PlutoGridEventManager({
-    required this.stateManager,
-  });
+  PlutoGridEventManager({required this.stateManager});
 
   final PublishSubject<PlutoGridEvent> _subject =
       PublishSubject<PlutoGridEvent>();
@@ -32,7 +30,7 @@ class PlutoGridEventManager {
         .where((event) => event.type.isThrottleLeading)
         .transform(
           ThrottleStreamTransformer(
-            (_) => TimerStream<PlutoGridEvent>(_, _.duration as Duration),
+            (val) => TimerStream<PlutoGridEvent>(val, val.duration as Duration),
             trailing: false,
             leading: true,
           ),
@@ -42,18 +40,19 @@ class PlutoGridEventManager {
         .where((event) => event.type.isThrottleTrailing)
         .transform(
           ThrottleStreamTransformer(
-            (_) => TimerStream<PlutoGridEvent>(_, _.duration as Duration),
+            (val) => TimerStream<PlutoGridEvent>(val, val.duration as Duration),
             trailing: true,
             leading: false,
           ),
         );
 
-    final debounceStream =
-        _subject.stream.where((event) => event.type.isDebounce).transform(
-              DebounceStreamTransformer(
-                (_) => TimerStream<PlutoGridEvent>(_, _.duration as Duration),
-              ),
-            );
+    final debounceStream = _subject.stream
+        .where((event) => event.type.isDebounce)
+        .transform(
+          DebounceStreamTransformer(
+            (val) => TimerStream<PlutoGridEvent>(val, val.duration as Duration),
+          ),
+        );
 
     _subscription = MergeStream([
       normalStream,
