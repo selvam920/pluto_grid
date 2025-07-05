@@ -44,9 +44,7 @@ class PlutoGridKeyManager {
 
   PlutoGridKeyEventResult eventResult = PlutoGridKeyEventResult();
 
-  PlutoGridKeyManager({
-    required this.stateManager,
-  });
+  PlutoGridKeyManager({required this.stateManager});
 
   final PublishSubject<PlutoKeyManagerEvent> _subject =
       PublishSubject<PlutoKeyManagerEvent>();
@@ -108,10 +106,12 @@ class PlutoGridKeyManager {
         if (stateManager.textEditingController != null) {
           stateManager.textEditingController!.text = keyEvent.event.character!;
           Future.delayed(const Duration(milliseconds: 20), () {
-            stateManager.textEditingController!.selection =
-                TextSelection.fromPosition(
+            stateManager
+                .textEditingController!
+                .selection = TextSelection.fromPosition(
               TextPosition(
-                  offset: stateManager.textEditingController!.text.length),
+                offset: stateManager.textEditingController!.text.length,
+              ),
             );
           });
         }
